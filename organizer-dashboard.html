@@ -275,7 +275,7 @@
       </div>
 
       <!-- Stats Row -->
-      <div class="stats-row">
+      <div class="stats-row" id="overview">
         <div class="stat-card">
           <div class="stat-icon" style="background:rgba(108,99,255,0.12);">📅</div>
           <div class="stat-card-info">
@@ -309,9 +309,9 @@
       <!-- Quick Actions -->
       <div class="quick-actions">
         <button class="quick-btn" onclick="toggleCreateForm()">➕ New Event</button>
-        <button class="quick-btn">📊 Export Report</button>
-        <button class="quick-btn">📧 Email Participants</button>
-        <button class="quick-btn">📋 View All Registrations</button>
+        <button class="quick-btn" onclick="showToast('Exporting event report...', 'success')">📊 Export Report</button>
+        <button class="quick-btn" onclick="showToast('Email composer opened (Mock)', 'info')">📧 Email Participants</button>
+        <button class="quick-btn" onclick="showSection('participants')">📋 View All Registrations</button>
       </div>
 
       <!-- Create Event Form (hidden by default) -->
@@ -363,7 +363,7 @@
       </div>
 
       <!-- Active Events Table -->
-      <div class="dashboard-section">
+      <div class="dashboard-section" id="my-events">
         <div class="section-hader">
           <h2>📅 My Active Events</h2>
           <select class="dashboard-input" style="width:auto; padding:8px 14px; border-radius:8px;">
@@ -394,7 +394,7 @@
       </div>
 
       <!-- Analytics Chart -->
-      <div class="dashboard-section">
+      <div class="dashboard-section" id="analytics">
         <div class="section-hader">
           <h2>📈 Registration Analytics</h2>
           <span style="font-size:0.82rem;color:#6b7280;">Last 7 days</span>
@@ -408,10 +408,10 @@
       </div>
 
       <!-- Recent Registrations -->
-      <div class="dashboard-section">
+      <div class="dashboard-section" id="participants">
         <div class="section-hader">
           <h2>👥 Recent Registrations</h2>
-          <button class="btn btn-ghost btn-sm">View All</button>
+          <button class="btn btn-ghost btn-sm" onclick="showToast('Loading full registration list...', 'info')">View All</button>
         </div>
         <div class="data-table-container">
           <table class="data-table">
@@ -505,8 +505,17 @@
 
     // Section navigation
     function showSection(sec, el) {
-      document.querySelectorAll('.sidebar-nav-item').forEach(i => i.classList.remove('active'));
-      el.classList.add('active');
+      if (el) {
+        document.querySelectorAll('.sidebar-nav-item').forEach(i => i.classList.remove('active'));
+        el.classList.add('active');
+      }
+      
+      const target = document.getElementById(sec);
+      if (target) {
+        const offset = 90; // Fixed navbar height (72px) + 18px padding
+        const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
     }
 
     // --- Dynamic Data Loading ---

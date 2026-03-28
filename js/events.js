@@ -4,17 +4,17 @@
    ================================================================ */
 
 (function () {
-  const searchInput  = document.getElementById('searchInput');
-  const pills        = document.querySelectorAll('.pill[data-filter]');
-  const sortSelect   = document.getElementById('sortSelect');
-  const eventsGrid   = document.getElementById('eventsGrid');
-  const eventCount   = document.getElementById('eventCount');
-  const noEventsMsg  = document.getElementById('noEventsMsg');
-  const gridViewBtn  = document.getElementById('gridView');
-  const listViewBtn  = document.getElementById('listView');
+  const searchInput = document.getElementById('searchInput');
+  const pills = document.querySelectorAll('.pill[data-filter]');
+  const sortSelect = document.getElementById('sortSelect');
+  const eventsGrid = document.getElementById('eventsGrid');
+  const eventCount = document.getElementById('eventCount');
+  const noEventsMsg = document.getElementById('noEventsMsg');
+  const gridViewBtn = document.getElementById('gridView');
+  const listViewBtn = document.getElementById('listView');
   const registerModal = document.getElementById('registerModal');
-  const closeModal   = document.getElementById('closeModal');
-  const modalName    = document.getElementById('modalEventName');
+  const closeModal = document.getElementById('closeModal');
+  const modalName = document.getElementById('modalEventName');
 
   let activeFilter = 'all';
 
@@ -40,15 +40,15 @@
 
   // ===== APPLY FILTERS =====
   function applyFilters() {
-    const query   = searchInput ? searchInput.value.toLowerCase().trim() : '';
-    const sortBy  = sortSelect ? sortSelect.value : 'date';
-    const cards   = Array.from(eventsGrid ? eventsGrid.querySelectorAll('.event-card') : []);
+    const query = searchInput ? searchInput.value.toLowerCase().trim() : '';
+    const sortBy = sortSelect ? sortSelect.value : 'date';
+    const cards = Array.from(eventsGrid ? eventsGrid.querySelectorAll('.event-card') : []);
 
     let visible = cards.filter(card => {
-      const cat   = card.dataset.category || '';
-      const name  = (card.dataset.name || '').toLowerCase();
+      const cat = card.dataset.category || '';
+      const name = (card.dataset.name || '').toLowerCase();
       const title = (card.querySelector('.event-title')?.textContent || '').toLowerCase();
-      const desc  = (card.textContent || '').toLowerCase();
+      const desc = (card.textContent || '').toLowerCase();
 
       const matchFilter = activeFilter === 'all' || cat === activeFilter;
       const matchSearch = !query || name.includes(query) || title.includes(query) || desc.includes(query);
@@ -104,7 +104,7 @@
       const btn = e.target.closest('.register-btn');
       if (!btn || btn.disabled) return;
 
-      const eventId   = btn.dataset.id;
+      const eventId = btn.dataset.id;
       const eventName = btn.dataset.name || 'this event';
 
       // 1. Check session via get_session.php
@@ -112,7 +112,7 @@
         .then(res => res.json())
         .then(data => {
           if (data.loggedIn && data.role === 'student') {
-            
+
             // TWO-CLICK REGISTRATION FLOW (Replaces native confirm)
             if (btn.dataset.state !== 'confirming') {
               // Click 1: Ask for confirmation
@@ -120,7 +120,7 @@
               btn.dataset.originalText = btn.textContent;
               btn.textContent = 'Confirm?';
               btn.style.background = '#10b981'; // Success green
-              
+
               // Revert after 3 seconds if not clicked
               setTimeout(() => {
                 if (btn.dataset.state === 'confirming') {
@@ -169,10 +169,10 @@
           }
         })
         .catch(err => {
-           console.error('Session check failed:', err);
-           // Fallback to modal
-           if (modalName) modalName.textContent = eventName;
-           if (registerModal) registerModal.classList.add('active');
+          console.error('Session check failed:', err);
+          // Fallback to modal
+          if (modalName) modalName.textContent = eventName;
+          if (registerModal) registerModal.classList.add('active');
         });
     });
   }
@@ -181,6 +181,109 @@
     closeModal.addEventListener('click', () => {
       registerModal.classList.remove('active');
     });
+  }
+
+  // ===== RENDER EVENTS =====
+  function renderEvents(events) {
+    if (!eventsGrid) return;
+    eventsGrid.innerHTML = '';
+
+    if (events.length === 0) {
+      if (noEventsMsg) noEventsMsg.style.display = 'block';
+      if (eventCount) eventCount.textContent = '0';
+      return;
+    }
+
+    if (noEventsMsg) noEventsMsg.style.display = 'none';
+    if (eventCount) eventCount.textContent = events.length;
+
+    events.forEach(ev => {
+      const isPast = new Date(ev.event_date) < new Date();
+      const pct = Math.min(100, Math.round((ev.registered_count / ev.max_capacity) * 100));
+      const catClass = `cat-bg-${ev.category.toLowerCase()}`;
+
+      const card = document.createElement('div');
+      card.className = 'event-card';
+
+      card.innerHTML = `
+        <div class="event-card-image ${catClass}">
+          <span class="event-category-badge">${ev.category}</span>
+          ${getCategoryEmoji(ev.category)}
+        </div>
+        <div class="event-card-body">
+          <h3 class="event-title">${ev.name}</h3>
+          
+          <div class="event-meta-list">
+            <div class="meta-item">
+              <span class="meta-icon">📅</span>
+              <span>${new Date(ev.event_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-icon">📍</span>
+              <span>${ev.venue}</span>
+            </div>
+          </div>
+          
+          <p class="event-description">${ev.description}</p>
+          
+          <div class="capacity-container">
+            <div class="capacity-header">
+              <span>Spots Filled</span>
+              <span>${pct}%</span>
+            </div>
+            <div class="capacity-progress">
+              <div class="progress-fill ${pct >= 100 ? 'full' : ''}" style="width: ${pct}%"></div>
+            </div>
+            <div style="font-size: 0.7rem; color: #9ca3af; margin-top: 4px;">
+              ${ev.registered_count} / ${ev.max_capacity} students registered
+            </div>
+          </div>
+
+          <div class="organizer-info">
+            <span>👤 ${ev.organizer_name || 'Tech Organizer'}</span>
+          </div>
+          
+          <div class="register-btn-wrap">
+            <button class="btn btn-primary register-btn" 
+                    style="width: 100%;"
+                    data-id="${ev.id}" 
+                    data-name="${ev.name}"
+                    ${isPast || ev.registered_count >= ev.max_capacity ? 'disabled' : ''}>
+              ${isPast ? 'Completed' : (ev.registered_count >= ev.max_capacity ? 'Event Full' : 'Register Now')}
+            </button>
+          </div>
+        </div>
+      `;
+      eventsGrid.appendChild(card);
+    });
+  }
+
+  function getCategoryEmoji(cat) {
+    const map = { technology: '🤖', cultural: '🎭', sports: '⚽', academic: '📚', workshop: '🛠️' };
+    return map[cat] || '✨';
+  }
+
+  // ===== FETCH EVENTS (AJAX) =====
+  function fetchEvents() {
+    const query = searchInput ? searchInput.value.trim() : '';
+    const sort = sortSelect ? sortSelect.value : 'date';
+    const url = `php/get_events.php?category=${activeFilter}&search=${encodeURIComponent(query)}&sort=${sort}`;
+
+    if (eventsGrid) eventsGrid.style.opacity = '0.5';
+
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          renderEvents(data.events);
+        } else {
+          console.error('Failed to fetch events:', data.message);
+        }
+      })
+      .catch(err => console.error('Error fetching events:', err))
+      .finally(() => {
+        if (eventsGrid) eventsGrid.style.opacity = '1';
+      });
   }
 
   // ===== DEBOUNCE =====
@@ -192,22 +295,22 @@
     };
   }
 
-  // ===== LIVE FETCH (AJAX) — Simulated =====
-  // In production, replace this with actual AJAX fetch to PHP backend:
-  //
-  //   fetch('php/get_events.php?category=' + activeFilter + '&search=' + query)
-  //     .then(res => res.json())
-  //     .then(data => renderEvents(data))
-  //     .catch(err => console.error('Error fetching events:', err));
-  //
-  // function renderEvents(events) {
-  //   eventsGrid.innerHTML = '';
-  //   events.forEach(ev => {
-  //     eventsGrid.innerHTML += `<div class="event-card">...</div>`;
-  //   });
-  // }
-
   // ===== INIT =====
-  applyFilters();
+  fetchEvents();
+
+  // Re-link filters to fetch instead of just DOM filtering
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      // activeFilter set in existing pill listener
+      setTimeout(fetchEvents, 0);
+    });
+  });
+
+  if (searchInput) {
+    searchInput.addEventListener('input', debounce(fetchEvents, 300));
+  }
+  if (sortSelect) {
+    sortSelect.addEventListener('change', fetchEvents);
+  }
 
 })();

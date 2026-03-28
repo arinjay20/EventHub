@@ -555,23 +555,37 @@
           grid.innerHTML = data.events.slice(0, 3).map(ev => {
             const icons = { technology: '🤖', cultural: '🎭', sports: '⚽', academic: '📚', workshop: '🛠️' };
             const icon = icons[ev.category] || '📅';
-            const date = new Date(ev.event_date).toLocaleDateString();
+            const date = new Date(ev.event_date).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'});
+            const catClass = `cat-bg-${ev.category.toLowerCase()}`;
+            const pct = Math.min(100, Math.round((ev.registered_count / ev.max_capacity) * 100));
             
             return `
               <div class="event-card">
-                <div class="event-card-image" style="background:linear-gradient(135deg,#6c63ff,#f5576c); font-size:3.5rem; display:flex; align-items:center; justify-content:center; color:white;">${icon}</div>
-                <div class="event-card-content">
-                  <span class="event-category">${icon} ${ev.category.charAt(0).toUpperCase() + ev.category.slice(1)}</span>
-                  <h3 class="event-title">${ev.name}</h3>
-                  <div class="event-meta">
-                    <div class="event-meta-item"><span>📅</span><span>${date}</span></div>
-                    <div class="event-meta-item"><span>📍</span><span>${ev.venue}</span></div>
-                    <div class="event-meta-item"><span>👥</span><span>${ev.registered_count} students registered</span></div>
-                  </div>
+                <div class="event-card-image ${catClass}">
+                  <span class="event-category-badge">${ev.category}</span>
+                  ${icon}
                 </div>
-                <div class="event-card-footer">
-                  <a href="event-details.html?id=${ev.id}" class="btn btn-ghost btn-sm" style="flex:1">View Details</a>
-                  <a href="login.html" class="btn btn-primary btn-sm" style="flex:1">Register</a>
+                <div class="event-card-body">
+                  <h3 class="event-title">${ev.name}</h3>
+                  <div class="event-meta-list">
+                    <div class="meta-item"><span>📅</span><span>${date}</span></div>
+                    <div class="meta-item"><span>📍</span><span>${ev.venue}</span></div>
+                  </div>
+                  <p class="event-description">${ev.description}</p>
+                  
+                  <div class="capacity-container">
+                    <div class="capacity-header">
+                      <span>Registration</span>
+                      <span>${pct}% filled</span>
+                    </div>
+                    <div class="capacity-progress">
+                      <div class="progress-fill ${pct >= 100 ? 'full' : ''}" style="width: ${pct}%"></div>
+                    </div>
+                  </div>
+
+                  <div class="register-btn-wrap">
+                    <a href="login.html" class="btn btn-primary btn-sm" style="width:100%">Register Now</a>
+                  </div>
                 </div>
               </div>
             `;

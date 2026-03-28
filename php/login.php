@@ -63,7 +63,7 @@ try {
         'message'  => 'Login successful! Welcome, ' . $user['first_name'] . '!',
         'role'     => $user['role'],
         'name'     => $user['first_name'],
-        'redirect' => $redirectMap[$user['role']] ?? '../index.html',
+        'redirect' => $redirectMap[$user['role']] ?? 'index.html',
     ]);
 
 } catch (PDOException $e) {
