@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard – EventHub</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #f0f2f8; }
+
+    /* ── Stats row ── */
+    .stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:20px; margin-bottom:28px; }
+    .stat-card { background:white; border-radius:16px; padding:22px; display:flex; align-items:center; gap:14px; box-shadow:0 2px 12px rgba(0,0,0,0.06); border:1px solid #eef0f7; transition:all 0.3s; }
+    .stat-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,0.1); }
+    .stat-icon { width:50px; height:50px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.4rem; flex-shrink:0; }
+    .stat-card-info h3 { font-size:1.5rem; font-weight:800; color:#111827; transition:color 0.4s; }
+    .stat-card-info h3.updated { color:#6c63ff; }
+    .stat-card-info p  { font-size:0.8rem; color:#6b7280; }
+
+    /* ── Event cards ── */
+    .my-events-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; }
+    .registered-card {
+      background:white; border-radius:16px; padding:20px;
+      box-shadow:0 2px 12px rgba(0,0,0,0.06); border:1px solid #eef0f7;
+      display:flex; flex-direction:column; gap:12px; transition:all 0.3s;
+      animation: cardIn 0.4s ease;
+    }
+    @keyframes cardIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    .registered-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,0.1); }
+    .registered-card.new-event { border-color:#6c63ff; box-shadow:0 0 0 2px rgba(108,99,255,0.2); }
+    .event-icon-box { width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; }
+    .countdown { background:#f8f9fc; border-radius:10px; padding:12px; text-align:center; font-size:0.82rem; color:#6b7280; }
+    .countdown strong { font-size:1.2rem; color:#6c63ff; display:block; }
+
+    /* ── Live indicator ── */
+    .live-chip {
+      display:inline-flex; align-items:center; gap:6px;
+      background:rgba(16,185,129,0.1); border:1px solid rgba(16,185,129,0.3);
+      color:#10b981; font-size:0.72rem; font-weight:700;
+      padding:3px 10px; border-radius:50px; letter-spacing:0.4px;
+    }
+    .live-chip-dot {
+      width:7px; height:7px; border-radius:50%; background:#10b981;
+      animation:dotPulse 1.5s infinite;
+    }
+    @keyframes dotPulse {
+      0%,100% { opacity:1; } 50% { opacity:0.3; }
+    }
+
+    /* ── Skeleton loading ── */
+    .skeleton { background:linear-gradient(90deg,#f0f0f0 25%,#e0e0e0 50%,#f0f0f0 75%); background-size:200% 100%; animation:shimmer 1.2s infinite; border-radius:8px; }
+    @keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+
+    /* ── Empty state ── */
+    .empty-state { text-align:center; padding:48px 20px; color:#9ca3af; }
+    .empty-state .icon { font-size:3rem; margin-bottom:12px; }
+  </style>
+</head>
+<body>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <nav class="navbar solid" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="navbar-brand">⚡ EventHub</a>
+      <ul class="navbar-menu" id="navbarMenu">
+        <li><a href="student-dashboard.html" class="active">Dashboard</a></li>
+        <li><a href="events.html">Browse Events</a></li>
+        <li><a href="login.html">Logout</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="Dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="dashboard-sidebar">
+      <div style="text-align:center; padding-bottom:24px; border-bottom:1px solid rgba(255,255,255,0.1);">
+        <div class="profile-avatar" style="margin:0 auto 12px;" id="sideAvatar">JS</div>
+        <h3 style="color:white;" id="sidebarName">Loading...</h3>
+        <p style="color:rgba(255,255,255,0.6); font-size:0.82rem;" id="sidebarDept">—</p>
+        <span class="badge badge-primary" style="margin-top:8px; display:inline-block;" id="sidebarRole">Student</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="sidebar-nav-item active"><span>📊</span><span>Overview</span></a>
+        <a href="events.html" class="sidebar-nav-item"><span>🔍</span><span>Browse Events</span></a>
+        <a href="#" class="sidebar-nav-item"><span>📅</span><span>My Registrations</span></a>
+        <a href="#" class="sidebar-nav-item"><span>🏆</span><span>Achievements</span></a>
+        <a href="#" class="sidebar-nav-item"><span>⚙️</span><span>Profile</span></a>
+        <a href="login.html" class="sidebar-nav-item" style="color:rgba(239,68,68,0.8);"><span>🚪</span><span>Logout</span></a>
+      </nav>
+    </aside>
+
+    <main class="dashboard-main">
+      <!-- Header -->
+      <div class="dashboard-header">
+        <div>
+          <h1 id="welcomeMsg">👋 Welcome back!</h1>
+          <p>Here's what's happening on your campus today. <span class="live-chip"><span class="live-chip-dot"></span>Live updates</span></p>
+        </div>
+        <a href="events.html" class="btn btn-primary">🔍 Explore Events</a>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(108,99,255,0.12);">📅</div>
+          <div class="stat-card-info"><h3 id="statReg">—</h3><p>Events Registered</p></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(16,185,129,0.12);">✅</div>
+          <div class="stat-card-info"><h3 id="statAtt">—</h3><p>Events Attended</p></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(245,158,11,0.12);">🏆</div>
+          <div class="stat-card-info"><h3 id="statCerts">2</h3><p>Certificates Earned</p></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon" style="background:rgba(245,87,108,0.12);">⭐</div>
+          <div class="stat-card-info"><h3 id="statScore">95</h3><p>Engagement Score</p></div>
+        </div>
+      </div>
+
+      <!-- My Registered Events -->
+      <div class="dashboard-section">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+          <h2 style="font-size:1.2rem;">📋 My Registered Events</h2>
+          <a href="events.html" class="btn btn-ghost btn-sm">Browse More</a>
+        </div>
+        <div class="my-events-grid" id="myEventsGrid">
+          <!-- skeleton while loading -->
+          <div class="registered-card skeleton" style="height:180px;"></div>
+          <div class="registered-card skeleton" style="height:180px;"></div>
+          <div class="registered-card skeleton" style="height:180px;"></div>
+        </div>
+      </div>
+
+      <!-- Trending Events -->
+      <div class="dashboard-section">
+        <h2 style="font-size:1.2rem; margin-bottom:16px;">🔥 Trending Events – Register Now</h2>
+        <div style="display:flex; flex-direction:column; gap:12px;" id="trendingList">
+          <!-- loaded by JS -->
+        </div>
+        <div style="text-align:center; margin-top:16px;">
+          <a href="events.html" class="btn btn-primary btn-sm">View All Events →</a>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script>
+    /* ──────────────────────────────────────────────
+       STUDENT DASHBOARD – live polling every 10s
+    ────────────────────────────────────────────── */
+
+    let prevRegCount = null;   // track changes to event registrations
+
+    /* Flash a stat number green when it updates */
+    function flashNum(id, val) {
+      const el = document.getElementById(id);
+      if (!el || el.textContent === String(val)) return;
+      el.textContent = val;
+      el.classList.add('updated');
+      setTimeout(() => el.classList.remove('updated'), 1200);
+    }
+
+    /* Days countdown helper */
+    function daysLabel(days) {
+      if (days <= 0) return 'Today!';
+      if (days === 1) return '1 day left';
+      return days + ' days left';
+    }
+
+    /* Render My Events grid */
+    function renderMyEvents(events) {
+      const grid = document.getElementById('myEventsGrid');
+      if (!events || events.length === 0) {
+        grid.innerHTML = `
+          <div class="empty-state" style="grid-column:1/-1;">
+            <div class="icon">📭</div>
+            <p>You haven't registered for any events yet.</p>
+            <a href="events.html" class="btn btn-primary btn-sm" style="margin-top:12px;">Browse Events</a>
+          </div>`;
+        return;
+      }
+
+      const newCount = events.length;
+      const isNew    = prevRegCount !== null && newCount > prevRegCount;
+      prevRegCount   = newCount;
+
+      grid.innerHTML = events.map((ev, idx) => `
+        <div class="registered-card ${isNew && idx === 0 ? 'new-event' : ''}">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div class="event-icon-box" style="background:${ev.color};">${ev.icon}</div>
+            <div>
+              <strong>${ev.name}</strong>
+              <span class="badge ${ev.status === 'full' ? 'badge-warning' : 'badge-success'}" style="display:block;margin-top:4px;">
+                ${ev.status === 'full' ? 'Event Full' : ev.days_left <= 0 ? 'Completed' : 'Upcoming'}
+              </span>
+            </div>
+          </div>
+          <div class="event-meta">
+            <div class="event-meta-item"><span>📅</span><span>${new Date(ev.event_date).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})}</span></div>
+            <div class="event-meta-item"><span>📍</span><span>${ev.location || 'TBD'}</span></div>
+          </div>
+          <div class="countdown"><strong>${daysLabel(ev.days_left)}</strong>until event</div>
+          ${ev.days_left > 0
+            ? `<button class="btn btn-ghost btn-sm" style="color:#ef4444;" onclick="cancelReg(${ev.id})">Cancel Registration</button>`
+            : `<span class="badge badge-success" style="text-align:center;">✅ Attended</span>`
+          }
+        </div>`).join('');
+    }
+
+    /* Render Trending Events */
+    function renderTrending(events) {
+      const list = document.getElementById('trendingList');
+      if (!events || events.length === 0) {
+        list.innerHTML = '<p style="color:#9ca3af;text-align:center;font-size:0.9rem;">No trending events right now.</p>';
+        return;
+      }
+      list.innerHTML = events.map(ev => `
+        <div style="display:flex;align-items:center;gap:14px;padding:14px;background:#f8f9fc;border-radius:12px;justify-content:space-between;">
+          <div style="display:flex;align-items:center;gap:14px;">
+            <div style="width:42px;height:42px;border-radius:10px;background:${ev.color};display:flex;align-items:center;justify-content:center;font-size:1.3rem;">${ev.icon}</div>
+            <div>
+              <strong style="font-size:0.9rem;">${ev.name}</strong><br>
+              <span style="font-size:0.78rem;color:#6b7280;">📅 ${new Date(ev.event_date).toLocaleDateString('en-IN',{day:'numeric',month:'short'})} &nbsp;·&nbsp; ${ev.seats_left} seats left</span>
+            </div>
+          </div>
+          <a href="events.html" class="btn btn-primary btn-sm">Register</a>
+        </div>`).join('');
+    }
+
+    /* Cancel registration placeholder */
+    function cancelReg(eventId) {
+      if (!confirm('Cancel your registration for this event?')) return;
+      // Could call a cancel.php endpoint here; for now show a toast
+      if (typeof showToast === 'function') showToast('Registration cancelled.', 'error');
+      setTimeout(loadDashboard, 500);
+    }
+
+    /* ── Main loader ── */
+    async function loadDashboard() {
+      try {
+        const res  = await fetch('php/student_data.php', { cache: 'no-store' });
+        const data = await res.json();
+        if (!data.success) return;
+
+        /* Sidebar */
+        const u = data.user;
+        const initials = (u.first_name[0] + u.last_name[0]).toUpperCase();
+        document.getElementById('sideAvatar').textContent  = initials;
+        document.getElementById('sidebarName').textContent = u.first_name + ' ' + u.last_name;
+        document.getElementById('sidebarDept').textContent = u.department || u.email;
+        document.getElementById('sidebarRole').textContent = u.role;
+        document.getElementById('welcomeMsg').textContent  = '👋 Welcome back, ' + u.first_name + '!';
+
+        /* Stats */
+        flashNum('statReg', data.events_registered);
+        flashNum('statAtt', data.events_attended);
+
+        /* Events */
+        renderMyEvents(data.my_events);
+        renderTrending(data.trending);
+
+      } catch (e) { /* silent fail */ }
+    }
+
+    /* Kick off + poll every 10 seconds */
+    loadDashboard();
+    setInterval(loadDashboard, 10000);
+  </script>
+</body>
+</html>

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse all college events at Graphic Era University – Technology, Cultural, Sports, Academic workshops and more.">
+  <title>Browse Events – EventHub | Graphic Era</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { background: #f8f9fc; }
+
+    .events-hero {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%);
+      padding: 120px 0 60px;
+      text-align: center;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .events-hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 20% 50%, rgba(108,99,255,0.2) 0%, transparent 50%),
+                  radial-gradient(circle at 80% 50%, rgba(245,87,108,0.15) 0%, transparent 50%);
+    }
+    .events-hero h1 { font-size: 3rem; margin-bottom: 16px; position: relative; }
+    .events-hero p { font-size: 1.1rem; opacity: 0.8; max-width: 600px; margin: 0 auto; position: relative; }
+
+    .filters-bar {
+      background: white;
+      padding: 24px 0;
+      border-bottom: 1px solid #eef0f7;
+      position: sticky;
+      top: 72px;
+      z-index: 100;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    }
+
+    .filters-inner {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 220px;
+      position: relative;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 12px 16px 12px 44px;
+      border: 2px solid #eef0f7;
+      border-radius: 50px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s;
+      background: #f8f9fc;
+    }
+    .search-box input:focus { border-color: #6c63ff; background: white; box-shadow: 0 0 0 3px rgba(108,99,255,0.1); }
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6b7280;
+    }
+
+    .filter-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      padding: 8px 18px;
+      border-radius: 50px;
+      border: 2px solid #eef0f7;
+      background: white;
+      color: #6b7280;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .pill:hover, .pill.active {
+      background: linear-gradient(135deg, #6c63ff, #f5576c);
+      border-color: transparent;
+      color: white;
+    }
+
+    .events-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 32px 0 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .events-count { color: #6b7280; font-size: 0.9rem; }
+    .events-count strong { color: #111827; }
+
+    .view-toggle button {
+      background: none;
+      border: 2px solid #eef0f7;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 1rem;
+    }
+    .view-toggle button.active { background: #6c63ff; border-color: #6c63ff; color: white; }
+
+    .events-grid { display: grid; gap: 24px; margin-bottom: 60px; }
+    .events-grid.grid-3 { grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); }
+    .events-grid.grid-1 { grid-template-columns: 1fr; }
+
+    /* List view card */
+    .events-grid.grid-1 .event-card {
+      flex-direction: row;
+      align-items: center;
+    }
+    .events-grid.grid-1 .event-card-image {
+      width: 200px;
+      height: 140px;
+      flex-shrink: 0;
+      border-radius: 12px 0 0 12px;
+    }
+
+    .no-events {
+      text-align: center;
+      padding: 60px;
+      color: #6b7280;
+    }
+    .no-events .emoji { font-size: 4rem; margin-bottom: 16px; }
+
+    /* Progress bar for capacity */
+    .capacity-bar {
+      height: 6px;
+      background: #eef0f7;
+      border-radius: 10px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+    .capacity-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(to right, #6c63ff, #f5576c);
+      transition: width 1s ease;
+    }
+    .capacity-text { font-size: 0.78rem; color: #6b7280; margin-top: 4px; }
+
+    /* Event card enhancements */
+    .event-card .event-category { margin-bottom: 6px; }
+    .event-card .event-title { margin: 4px 0 8px; }
+
+    /* Organizer badge */
+    select.sort-select {
+      padding: 10px 16px;
+      border: 2px solid #eef0f7;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      outline: none;
+      cursor: pointer;
+      background: white;
+      color: #374151;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+    select.sort-select:focus { border-color: #6c63ff; }
+  </style>
+</head>
+<body>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar solid" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="navbar-brand">⚡ EventHub</a>
+      <ul class="navbar-menu" id="navbarMenu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="events.html" class="active">Events</a></li>
+        <li><a href="login.html">Login</a></li>
+        <li><a href="register.html" style="background:linear-gradient(135deg,#6c63ff,#f5576c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;">Register</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Events Hero -->
+  <section class="events-hero">
+    <div class="container">
+      <h1>🎓 Explore College Events</h1>
+      <p>Find the perfect events to attend, learn new skills, and connect with your campus community at Graphic Era University.</p>
+    </div>
+  </section>
+
+  <!-- Filters Bar -->
+  <div class="filters-bar">
+    <div class="container">
+      <div class="filters-inner">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Search events by name, description...">
+        </div>
+        <div class="filter-pills">
+          <button class="pill active" data-filter="all">All</button>
+          <button class="pill" data-filter="technology">🤖 Technology</button>
+          <button class="pill" data-filter="cultural">🎭 Cultural</button>
+          <button class="pill" data-filter="sports">⚽ Sports</button>
+          <button class="pill" data-filter="academic">📚 Academic</button>
+          <button class="pill" data-filter="workshop">🛠️ Workshop</button>
+        </div>
+        <select class="sort-select" id="sortSelect">
+          <option value="date">Sort by Date</option>
+          <option value="name">Sort by Name</option>
+          <option value="capacity">Sort by Capacity</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Events Grid -->
+  <section style="padding: 0 0 60px;">
+    <div class="container">
+      <div class="events-toolbar">
+        <div class="events-count">Showing <strong id="eventCount">8</strong> events</div>
+        <div class="view-toggle">
+          <button id="gridView" class="active" title="Grid View">⊞</button>
+          <button id="listView" title="List View">☰</button>
+        </div>
+      </div>
+
+      <div class="events-grid grid-3" id="eventsGrid">
+
+        <!-- Dynamically loaded -->
+
+      </div><!-- end events grid -->
+
+      <div id="noEventsMsg" class="no-events" style="display:none;">
+        <div class="emoji">🔍</div>
+        <h3>No events found</h3>
+        <p>Try a different search term or category.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>⚡ EventHub</h3>
+          <p style="font-size:0.875rem; opacity:0.65; margin-top:10px; line-height:1.7;">Your gateway to exciting college events and campus community engagement at Graphic Era University.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Quick Links</h3>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="login.html">Login</a></li>
+            <li><a href="register.html">Register</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>For Organizers</h3>
+          <ul class="footer-links">
+            <li><a href="organizer-dashboard.html">Create Event</a></li>
+            <li><a href="organizer-dashboard.html">Manage Events</a></li>
+            <li><a href="#">Guidelines</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h3>Contact</h3>
+          <ul class="footer-links">
+            <li>📧 GraphicEra@eventhub.edu</li>
+            <li>📍 Graphic Era Campus, India</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 EventHub – Smart College Event Portal. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Registration Modal -->
+  <div class="modal-overlay" id="registerModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 style="font-size:1.3rem;">🎯 Register for Event</h2>
+        <button class="modal-close" id="closeModal">✕</button>
+      </div>
+      <p id="modalEventName" style="background:linear-gradient(135deg,#6c63ff,#f5576c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:700;font-size:1rem;margin-bottom:20px;"></p>
+      <p style="color:#6b7280;font-size:0.9rem;margin-bottom:20px;">Please login or create an account to register for this event.</p>
+      <div style="display:flex;gap:12px;">
+        <a href="login.html" class="btn btn-primary" style="flex:1;">Login to Register</a>
+        <a href="register.html" class="btn btn-outline" style="flex:1; color:#6c63ff; border-color:#6c63ff;">Create Account</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
+  <script src="js/events.js"></script>
+</body>
+</html>

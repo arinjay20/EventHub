@@ -1,0 +1,12 @@
+# Folders to ignore
+tmp/
+vendor/
+node_modules/
+
+# Files to ignore
+.DS_Store
+Thumbs.db
+*.log
+config.php (if it contains secrets)
+# Database credentials in php/db.php should be handled carefully
+# but usually for small projects developers commit them if they are defaults
