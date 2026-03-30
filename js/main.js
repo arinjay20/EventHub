@@ -72,16 +72,51 @@ function animateCounter(el, target, suffix = '') {
 }
 
 function initStats() {
-  const statsMap = {
-    statEvents:     { val: 50,   suffix: '+' },
-    statStudents:   { val: 2400, suffix: '+' },
-    statOrganizers: { val: 30,   suffix: '+' },
-    statCategories: { val: 8,    suffix: '' },
-  };
-  Object.entries(statsMap).forEach(([id, cfg]) => {
-    const el = document.getElementById(id);
-    if (el) animateCounter(el, cfg.val, cfg.suffix);
-  });
+  fetch('php/live_feed.php?action=all')
+    .then(res => res.json())
+    .then(data => {
+      if (!data.success) return;
+
+      // Update Animated Stats Grid
+      const statsMap = {
+        statEvents:     { val: data.active_events || 0,   suffix: '+' },
+        statStudents:   { val: data.total_users || 0,     suffix: '+' },
+        statOrganizers: { val: 32,                        suffix: '+' }, // Typical base for a campus
+        statCategories: { val: 12,                       suffix: '' },
+      };
+
+      Object.entries(statsMap).forEach(([id, cfg]) => {
+        const el = document.getElementById(id);
+        if (el) animateCounter(el, cfg.val, cfg.suffix);
+      });
+
+      // Update Live Mini-Stats
+      if (document.getElementById('lsTotalUsers'))    document.getElementById('lsTotalUsers').textContent = data.total_users;
+      if (document.getElementById('lsActiveEvents'))  document.getElementById('lsActiveEvents').textContent = data.active_events;
+      if (document.getElementById('lsTotalRegs'))    document.getElementById('lsTotalRegs').textContent = data.total_registrations;
+
+      // Update Community Spotlight
+      const stack = document.getElementById('liveAvatarStack');
+      const text  = document.getElementById('communityText');
+      if (stack && data.feed && data.feed.length > 0) {
+        stack.innerHTML = data.feed.slice(0, 4).map((user, i) => `
+          <div class="avatar" style="width: 45px; height: 45px; border-radius: 50%; 
+               background: ${['#6c63ff', '#f5576c', '#43e97b', '#3b82f6'][i%4]}; 
+               border: 2px solid #0a0a0f; margin-left: ${i === 0 ? '0' : '-12px'}; 
+               display: flex; align-items: center; justify-content: center; 
+               font-weight: bold; font-size: 0.8rem; color: #fff;">
+            ${user.avatar}
+          </div>
+        `).join('');
+        
+        if (data.total_users > 4) {
+          stack.innerHTML += `<div class="avatar" style="width: 45px; height: 45px; border-radius: 50%; background: #374151; border: 2px solid #0a0a0f; margin-left: -12px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem; color: #fff;">+${data.total_users - 4}</div>`;
+        }
+        
+        if (text) text.innerHTML = `Connecting **${data.total_users.toLocaleString()}** students across Graphic Era.`;
+      }
+    })
+    .catch(err => console.error('Stats fetch failed:', err));
 }
 
 // Trigger on scroll into view
@@ -97,6 +132,10 @@ function initStats() {
 
   const statsSection = document.querySelector('.stats-section');
   if (statsSection) observer.observe(statsSection);
+  
+  // Also trigger if live section is visible
+  const liveSection = document.getElementById('liveFeedSection');
+  if (liveSection) observer.observe(liveSection);
 })();
 
 // ===== SCROLL REVEAL ANIMATIONS =====

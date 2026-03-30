@@ -18,7 +18,8 @@ try {
     $role    = $_SESSION['user_role'] ?? null;
 
     if (!$user_id || $role !== 'student') {
-        die(json_encode(['success' => false, 'message' => 'Unauthorized: Please login as a student.']));
+        echo json_encode(['success' => false, 'message' => 'Unauthorized']);
+        exit;
     }
 
     /* ---- User profile ---- */

@@ -13,7 +13,7 @@ $user_id = $_SESSION['user_id'] ?? null;
 $role    = $_SESSION['user_role'] ?? null;
 
 if (!$user_id || $role !== 'organizer') {
-    echo json_encode(['success' => false, 'message' => 'Unauthorized: Please login as an organizer.']);
+    echo json_encode(['success' => false, 'message' => 'Unauthorized']);
     exit;
 }
 

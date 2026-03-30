@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="EventHub - Smart College Event Management Portal for Graphic Era University. Discover, register, and manage campus events seamlessly.">
+  <meta name="description"
+    content="EventHub - Smart College Event Management Portal for Graphic Era University. Discover, register, and manage campus events seamlessly.">
   <title>EventHub – Smart College Event Portal | Home</title>
   <link rel="stylesheet" href="style.css">
   <style>
@@ -11,7 +13,7 @@
     .btn-solid {
       background: linear-gradient(135deg, #6c63ff, #f5576c);
       color: white;
-      box-shadow: 0 6px 20px rgba(108,99,255,0.45);
+      box-shadow: 0 6px 20px rgba(108, 99, 255, 0.45);
       padding: 14px 36px;
       border-radius: 50px;
       font-weight: 700;
@@ -22,12 +24,16 @@
       transition: all 0.3s ease;
       border: none;
     }
-    .btn-solid:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(108,99,255,0.6); }
+
+    .btn-solid:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(108, 99, 255, 0.6);
+    }
 
     .btn-glass {
-      background: rgba(255,255,255,0.12);
+      background: rgba(255, 255, 255, 0.12);
       color: white;
-      border: 2px solid rgba(255,255,255,0.5);
+      border: 2px solid rgba(255, 255, 255, 0.5);
       padding: 14px 36px;
       border-radius: 50px;
       font-weight: 700;
@@ -38,12 +44,32 @@
       transition: all 0.3s ease;
       backdrop-filter: blur(8px);
     }
-    .btn-glass:hover { background: rgba(255,255,255,0.2); border-color: white; transform: translateY(-3px); }
+
+    .btn-glass:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: white;
+      transform: translateY(-3px);
+    }
 
     /* Section styling */
-    .featured-section { padding: 80px 0; background: #f8f9fc; }
-    .section-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; flex-wrap: wrap; gap: 16px; }
-    .section-head h2 { font-size: 2rem; color: #111827; }
+    .featured-section {
+      padding: 80px 0;
+      background: #f8f9fc;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .section-head h2 {
+      font-size: 2rem;
+      color: #111827;
+    }
 
     /* CTA banner */
     .cta-banner {
@@ -54,163 +80,301 @@
       position: relative;
       overflow: hidden;
     }
+
     .cta-banner::before {
       content: '';
-      position: absolute; inset: 0;
+      position: absolute;
+      inset: 0;
       background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='white' fill-opacity='0.03'%3E%3Ccircle cx='40' cy='40' r='20'/%3E%3C/g%3E%3C/svg%3E");
     }
-    .cta-banner h2 { font-size: 2.5rem; margin-bottom: 16px; }
-    .cta-banner p { font-size: 1.1rem; opacity: 0.9; max-width: 550px; margin: 0 auto 32px; }
-    .cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
-    .btn-white { background: white; color: #6c63ff; font-weight: 700; padding: 14px 36px; border-radius: 50px; border: none; transition: all 0.3s; }
-    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0,0,0,0.2); }
-    .btn-white-outline { background: rgba(10, 10, 15, 0.4); backdrop-filter: blur(10px); color: white; border: 2px solid white; font-weight: 700; padding: 14px 36px; border-radius: 50px; transition: all 0.3s; }
-    .btn-white-outline:hover { background: rgba(255,255,255,0.15); transform: translateY(-2px); }
 
-    /* ===== LIVE FEED SECTION ===== */
+    .cta-banner h2 {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+    }
+
+    .cta-banner p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      max-width: 550px;
+      margin: 0 auto 32px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn-white {
+      background: white;
+      color: #6c63ff;
+      font-weight: 700;
+      padding: 14px 36px;
+      border-radius: 50px;
+      border: none;
+      transition: all 0.3s;
+    }
+
+    .btn-white:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-white-outline {
+      background: rgba(10, 10, 15, 0.4);
+      backdrop-filter: blur(10px);
+      color: white;
+      border: 2px solid white;
+      font-weight: 700;
+      padding: 14px 36px;
+      border-radius: 50px;
+      transition: all 0.3s;
+    }
+
+    .btn-white-outline:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    /* ===== LIVE FEED SECTION (PROFESSIONAL CLEAN) ===== */
     .live-section {
-      padding: 80px 0;
-      background: linear-gradient(180deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-      position: relative; overflow: hidden;
+      padding: 100px 0;
+      background: linear-gradient(135deg, #1e1b4b 0%, #312e81 100%); /* Deep Indigo Gradient from screenshot */
+      position: relative;
+      color: #ffffff;
     }
-    .live-section::before {
-      content: '';
-      position: absolute; inset: 0; z-index: 0;
-      background: radial-gradient(ellipse at 20% 50%, rgba(108,99,255,0.18) 0%, transparent 60%),
-                  radial-gradient(ellipse at 80% 50%, rgba(245,87,108,0.15) 0%, transparent 60%);
+
+    .live-section .container {
+      position: relative;
+      z-index: 1;
     }
-    .live-section .container { position: relative; z-index: 1; }
 
     .live-header {
-      display: flex; align-items: center; justify-content: space-between;
-      margin-bottom: 32px; flex-wrap: wrap; gap: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      gap: 12px;
     }
+
     .live-title {
-      font-size: 1.9rem; font-weight: 800; color: white;
-      display: flex; align-items: center; gap: 12px;
+      font-size: 2rem;
+      font-weight: 800;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
+
     .live-dot {
-      width: 12px; height: 12px; border-radius: 50%;
-      background: #10b981;
-      box-shadow: 0 0 0 0 rgba(16,185,129,0.5);
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--color-success);
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
       animation: livePulse 1.5s infinite;
-      display: inline-block; flex-shrink: 0;
+      display: inline-block;
+      flex-shrink: 0;
     }
+
     @keyframes livePulse {
-      0%   { transform: scale(1); box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
-      70%  { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(16,185,129,0); }
-      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+      70% { transform: scale(1.1); box-shadow: 0 0 0 12px rgba(16, 185, 129, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
     }
+
     .live-badge {
-      background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.4);
-      color: #10b981; font-size: 0.78rem; font-weight: 700;
-      padding: 4px 12px; border-radius: 50px; letter-spacing: 0.5px;
-      display: flex; align-items: center; gap: 6px;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: var(--color-success);
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 6px 14px;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     /* Live stats row */
     .live-stats-row {
-      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
-      margin-bottom: 36px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 40px;
     }
-    @media(max-width:768px) { .live-stats-row { grid-template-columns: repeat(2,1fr); } }
+
+    @media(max-width:768px) {
+      .live-stats-row { grid-template-columns: repeat(2, 1fr); }
+    }
+
     .live-stat-card {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px; padding: 20px 16px; text-align: center;
-      backdrop-filter: blur(8px); transition: transform 0.3s;
+      background: rgba(255, 255, 255, 0.05); /* Glass effect */
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      padding: 24px 20px;
+      text-align: center;
+      transition: var(--transition);
+      backdrop-filter: blur(10px);
     }
-    .live-stat-card:hover { transform: translateY(-4px); }
+
+    .live-stat-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--color-primary);
+      box-shadow: 0 15px 30px rgba(108, 99, 255, 0.1);
+    }
+
     .live-stat-num {
-      font-size: 2rem; font-weight: 800; color: white;
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #ffffff;
       font-family: 'Poppins', sans-serif;
       transition: all 0.4s;
     }
-    .live-stat-num.updated { color: #10b981; }
+
+    .live-stat-num.updated {
+      color: var(--color-primary);
+    }
+
     .live-stat-label {
-      font-size: 0.78rem; color: rgba(255,255,255,0.55);
-      margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.6);
+      margin-top: 6px;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: 0.5px;
     }
 
     /* Feed list */
     .feed-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
     }
-    @media(max-width:768px) { .feed-grid { grid-template-columns: 1fr; } }
+
+    @media(max-width:768px) {
+      .feed-grid { grid-template-columns: 1fr; }
+    }
 
     .feed-card {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 14px; padding: 16px 18px;
-      display: flex; align-items: center; gap: 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: var(--transition);
       backdrop-filter: blur(8px);
-      transition: all 0.3s;
-      animation: feedIn 0.4s ease forwards;
     }
+
+    .feed-card:hover {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: var(--color-primary);
+    }
+
     .feed-card.new-entry {
-      border-color: rgba(16,185,129,0.5);
-      background: rgba(16,185,129,0.08);
+      border-color: var(--color-success);
+      background: rgba(16, 185, 129, 0.05);
       animation: feedNew 0.5s ease;
     }
+
     @keyframes feedIn {
       from { opacity: 0; transform: translateY(12px); }
-      to   { opacity: 1; transform: translateY(0); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    @keyframes feedNew {
-      0%   { background: rgba(16,185,129,0.25); transform: scale(1.02); }
-      100% { background: rgba(16,185,129,0.08); transform: scale(1); }
-    }
-    .feed-avatar {
-      width: 42px; height: 42px; border-radius: 50%;
-      background: linear-gradient(135deg, #6c63ff, #f5576c);
-      display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 0.85rem; color: white;
-      flex-shrink: 0;
-    }
-    .feed-info { flex: 1; min-width: 0; }
-    .feed-name { font-weight: 700; color: white; font-size: 0.9rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .feed-dept { font-size: 0.76rem; color: rgba(255,255,255,0.5); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .feed-role-badge {
-      font-size: 0.68rem; font-weight: 700; padding: 2px 8px;
-      border-radius: 50px; text-transform: uppercase; letter-spacing: 0.5px;
-      flex-shrink: 0;
-    }
-    .role-student  { background: rgba(108,99,255,0.2); color: #a78bfa; border: 1px solid rgba(108,99,255,0.4); }
-    .role-organizer{ background: rgba(245,87,108,0.2); color: #fb7185; border: 1px solid rgba(245,87,108,0.4); }
-    .role-admin    { background: rgba(245,158,11,0.2); color: #fbbf24; border: 1px solid rgba(245,158,11,0.4); }
-    .feed-time { font-size: 0.72rem; color: rgba(255,255,255,0.35); margin-top: 2px; }
 
-    #feedEmpty { color: rgba(255,255,255,0.4); text-align:center; padding: 40px 0; font-size:0.9rem; }
+    @keyframes feedNew {
+      0% { background: rgba(16, 185, 129, 0.15); transform: scale(1.02); }
+      100% { background: rgba(16, 185, 129, 0.05); transform: scale(1); }
+    }
+
+    .feed-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: white;
+      flex-shrink: 0;
+      box-shadow: 0 4px 10px rgba(108, 99, 255, 0.3);
+    }
+
+    .feed-info { flex: 1; min-width: 0; }
+
+    .feed-name {
+      font-weight: 700;
+      color: #ffffff;
+      font-size: 0.95rem;
+    }
+
+    .feed-dept {
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin-top: 2px;
+    }
+
+    .feed-role-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 50px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+
+    .role-student { background: rgba(108, 99, 255, 0.08); color: var(--color-primary); border: 1px solid rgba(108, 99, 255, 0.15); }
+    .role-organizer { background: rgba(245, 87, 108, 0.08); color: var(--color-secondary); border: 1px solid rgba(245, 87, 108, 0.15); }
+    .role-admin { background: rgba(245, 158, 11, 0.08); color: var(--color-warning); border: 1px solid rgba(245, 158, 11, 0.15); }
+
+    .feed-time { font-size: 0.75rem; color: var(--color-gray-400); margin-top: 4px; }
+    #feedEmpty { color: var(--color-gray-400); text-align: center; padding: 40px 0; font-size: 1rem; width: 100%; grid-column: 1 / -1; }
 
     /* Announcement ticker */
-
     .ticker-wrap {
-      background: linear-gradient(90deg, #6c63ff, #f5576c);
+      background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
       color: white;
-      padding: 10px 0;
+      padding: 12px 0;
       overflow: hidden;
       white-space: nowrap;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
     }
+
     .ticker-content {
       display: inline-block;
-      animation: ticker 25s linear infinite;
-      font-size: 0.9rem;
-      font-weight: 500;
+      animation: ticker 30s linear infinite;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
     }
+
     @keyframes ticker {
       from { transform: translateX(100vw); }
       to { transform: translateX(-100%); }
     }
+
     .logo, .navbar-brand {
       font-family: 'Poppins', sans-serif;
-      font-size: 1.5rem;
+      font-size: 1.6rem!important;
       font-weight: 800;
       color: white;
       letter-spacing: -0.5px;
-      text-shadow: 0 2px 10px rgba(108, 99, 255, 0.5);
+    }
+    
+    .navbar.scrolled .logo, .navbar.solid .logo {
+        color: var(--color-gray-900)!important;
     }
   </style>
 </head>
+
 <body>
 
   <!-- Toast Container -->
@@ -219,7 +383,10 @@
   <!-- Navigation -->
   <nav class="navbar" id="navbar">
     <div class="nav-container">
-      <div class="logo">⚡ EventHub</div>
+<div class="logo">
+  <img src="https://geu.ac.in/wp-content/uploads/2023/03/geu_white.svg" alt="GEU Logo" style="height: 50px; width: auto; vertical-align: middle; margin-right: 12px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.15));">
+  EventHub
+</div>
       <ul class="navbar-menu" id="navbarMenu">
         <li><a href="index.html">Home</a></li>
         <li><a href="events.html">Events</a></li>
@@ -246,20 +413,24 @@
   <!-- Hero Section -->
   <section class="video-bg" style="margin-top:0; height: calc(100vh - 72px - 40px);">
     <iframe
-      src="https://www.youtube.com/embed/XuW9Yc6Ow2E?autoplay=1&mute=1&loop=1&playlist=XuW9Yc6Ow2E&controls=0&modestbranding=1&showinfo=0"
+      src="https://www.youtube.com/embed/K9HiKoxpCcg?autoplay=1&mute=1&loop=1&playlist=K9HiKoxpCcg&controls=0&modestbranding=1&showinfo=0"
       frameborder="0"
       allow="autoplay; encrypted-media"
       allowfullscreen
       title="Hero Background Video">
     </iframe>
-    <div class="overlay"></div>
+    <div class="overlay" style="background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.4) 100%); backdrop-filter: saturate(120%) blur(4px);"></div>
     <div class="content">
-      <div style="display:inline-block; background:rgba(108,99,255,0.2); border:1px solid rgba(108,99,255,0.5); border-radius:50px; padding:6px 18px; font-size:0.85rem; color:rgba(255,255,255,0.9); margin-bottom:20px; backdrop-filter:blur(8px);">
+      <div
+        style="display:inline-block; background:rgba(108,99,255,0.2); border:1px solid rgba(108,99,255,0.5); border-radius:50px; padding:6px 18px; font-size:0.85rem; color:rgba(255,255,255,0.9); margin-bottom:20px; backdrop-filter:blur(8px);">
         🎓 Graphic Era University – Campus Event Portal
       </div>
-      <h1 class="hero-title">Discover &amp; Join<br><span style="background:linear-gradient(135deg,#a78bfa,#f472b6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Exciting College Events</span></h1>
+      <h1 class="hero-title">Discover &amp; Join<br><span
+          style="background:linear-gradient(135deg,#a78bfa,#f472b6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Exciting
+          College Events</span></h1>
       <p class="hero-subtitle">
-        Connect with the Graphic Era community, explore events, and make unforgettable memories. Never miss out on learning and fun opportunities on campus!
+        Connect with the Graphic Era community, explore events, and make unforgettable memories. Never miss out on
+        learning and fun opportunities on campus!
       </p>
       <div class="hero-cta">
         <a href="events.html" class="btn-solid">🎯 Browse Events</a>
@@ -286,8 +457,8 @@
           <p>Active Organizers</p>
         </div>
         <div class="stat-item">
-          <h3 id="statToday">0</h3>
-          <p>Joined Today 🔥</p>
+          <h3>5k+</h3>
+          <p>Enrolled Students</p>
         </div>
       </div>
     </div>
@@ -337,10 +508,11 @@
         <h2>⭐ Featured Events</h2>
         <a href="events.html" class="btn btn-primary btn-sm">View All Events →</a>
       </div>
-        <div id="featuredGrid" class="grid grid-3">
-          <!-- Dynamically loaded -->
-          <div style="grid-column: 1 / -1; text-align: center; color: #6b7280; padding: 40px 0;">⏳ Loading featured events...</div>
-        </div>
+      <div id="featuredGrid" class="grid grid-3">
+        <!-- Dynamically loaded -->
+        <div style="grid-column: 1 / -1; text-align: center; color: #6b7280; padding: 40px 0;">⏳ Loading featured
+          events...</div>
+      </div>
     </div>
   </section>
 
@@ -353,7 +525,7 @@
           <span class="live-dot"></span>
           Live Member Activity
         </div>
-        <div class="live-badge">🔄 Auto-refreshing every 5s</div>
+        
       </div>
 
       <!-- Live mini-stats -->
@@ -370,10 +542,15 @@
           <div class="live-stat-num" id="lsTotalRegs">–</div>
           <div class="live-stat-label">Registrations</div>
         </div>
-        <div class="live-stat-card">
-          <div class="live-stat-num" id="lsNewToday">–</div>
-          <div class="live-stat-label">Joined Today</div>
-        </div>
+          <div class="live-stat-card community-spotlight" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.15); backdrop-filter: blur(12px);">
+            <h4 style="margin-bottom: 20px; font-size: 1.2rem; color: #ffffff; font-weight: 800;">Join the Community</h4>
+            <div id="liveAvatarStack" class="avatar-stack" style="display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+              <div class="avatar" style="width: 50px; height: 50px; border-radius: 50%; background: var(--color-primary); border: 2px solid #fff; margin-left: -15px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; color: #fff; box-shadow: var(--shadow-md);">GE</div>
+              <div class="avatar" style="width: 50px; height: 50px; border-radius: 50%; background: var(--color-secondary); border: 2px solid #fff; margin-left: -15px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; color: #fff; box-shadow: var(--shadow-md);">EH</div>
+            </div>
+            <p id="communityText" style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.7); line-height: 1.5; font-weight: 500;">Connecting **10+** students across Graphic Era.</p>
+            <div class="live-pulse" style="width: 10px; height: 10px; border-radius: 50%; background: var(--color-success); box-shadow: 0 0 10px var(--color-success); margin: 20px auto 0; animation: livePulse 2s infinite;"></div>
+          </div>
       </div>
 
       <!-- Recent members grid -->
@@ -402,7 +579,9 @@
       <div class="footer-content">
         <div class="footer-section">
           <h3>⚡ EventHub</h3>
-          <p style="font-size:0.875rem; opacity:0.65; line-height:1.7; margin-top:10px;">Your go-to platform for discovering and managing college events at Graphic Era University. Connect, explore, and make the most of your campus life.</p>
+          <p style="font-size:0.875rem; opacity:0.65; line-height:1.7; margin-top:10px;">Your go-to platform for
+            discovering and managing college events at Graphic Era University. Connect, explore, and make the most of
+            your campus life.</p>
         </div>
         <div class="footer-section">
           <h3>Quick Links</h3>
@@ -442,13 +621,13 @@
   <!-- ===== LIVE FEED POLLING ===== -->
   <script>
     /* ── State ── */
-    let lastSeenId  = 0;   // highest user ID the client knows about
+    let lastSeenId = 0;   // highest user ID the client knows about
     let isFirstLoad = true;
 
     /* ── Role badge ── */
     function roleBadge(role) {
-      const map = { student:'role-student', organizer:'role-organizer', admin:'role-admin' };
-      return `<span class="feed-role-badge ${map[role]||'role-student'}">${role}</span>`;
+      const map = { student: 'role-student', organizer: 'role-organizer', admin: 'role-admin' };
+      return `<span class="feed-role-badge ${map[role] || 'role-student'}">${role}</span>`;
     }
 
     /* ── Flash stat number green when it changes ── */
@@ -494,17 +673,17 @@
     async function pollFeed() {
       try {
         /* Always pass last_id so PHP uses WHERE id > last_id (no timezone issues) */
-        const url  = `php/live_feed.php?action=all&last_id=${lastSeenId}`;
-        const res  = await fetch(url, { cache: 'no-store' });
+        const url = `php/live_feed.php?action=all&last_id=${lastSeenId}`;
+        const res = await fetch(url, { cache: 'no-store' });
         if (!res.ok) return;
         const data = await res.json();
         if (!data.success) return;
 
         /* ── Stats ── */
-        flashStat('lsTotalUsers',   data.total_users);
+        flashStat('lsTotalUsers', data.total_users);
         flashStat('lsActiveEvents', data.active_events);
-        flashStat('lsTotalRegs',    data.total_registrations);
-        flashStat('lsNewToday',     data.new_today);
+        flashStat('lsTotalRegs', data.total_registrations);
+        flashStat('lsNewToday', data.new_today);
         const hs = document.getElementById('statStudents');
         const ht = document.getElementById('statToday');
         if (hs) hs.textContent = data.total_users + '+';
@@ -516,8 +695,8 @@
         if (isFirstLoad && data.feed && data.feed.length > 0) {
           /* First load – render all 10 */
           grid.innerHTML = data.feed.map(u => buildCard(u, false)).join('');
-          lastSeenId     = data.max_id;   /* server tells us the max id */
-          isFirstLoad    = false;
+          lastSeenId = data.max_id;   /* server tells us the max id */
+          isFirstLoad = false;
 
         } else if (!isFirstLoad && data.feed && data.feed.length > 0) {
           /* Subsequent polls – these are ALL new (PHP already filtered id > last_id) */
@@ -547,18 +726,18 @@
     async function fetchFeaturedEvents() {
       const grid = document.getElementById('featuredGrid');
       if (!grid) return;
-      
+
       try {
         const res = await fetch('php/get_events.php?sort=date&limit=3');
         const data = await res.json();
         if (data.success && data.events.length > 0) {
           grid.innerHTML = data.events.slice(0, 3).map(ev => {
             const icons = { technology: '🤖', cultural: '🎭', sports: '⚽', academic: '📚', workshop: '🛠️' };
-            const icon = icons[ev.category] || '📅';
-            const date = new Date(ev.event_date).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'});
+            const icon = icons[ev.category.toLowerCase()] || '📅';
+            const date = new Date(ev.event_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
             const catClass = `cat-bg-${ev.category.toLowerCase()}`;
-            const pct = Math.min(100, Math.round((ev.registered_count / ev.max_capacity) * 100));
-            
+            const pct = Math.min(100, Math.round((ev.registered_count / (ev.max_capacity || 100)) * 100));
+
             return `
               <div class="event-card">
                 <div class="event-card-image ${catClass}">
@@ -600,4 +779,5 @@
     fetchFeaturedEvents();
   </script>
 </body>
+
 </html>
