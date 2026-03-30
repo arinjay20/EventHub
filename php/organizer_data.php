@@ -38,13 +38,12 @@ try {
     $my_events = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     // 3. Get Recent Registrations (for organizer's events)
-    $stmt = $pdo->prepare("SELECT u.first_name, u.last_name, u.email, e.name as event_name, r.registration_date
+    $stmt = $pdo->prepare("SELECT r.full_name, r.student_id, r.course, r.phone, e.name as event_name, r.registration_date
                           FROM registrations r
-                          JOIN users u ON r.user_id = u.id
                           JOIN events e ON r.event_id = e.id
                           WHERE e.organizer_id = ?
                           ORDER BY r.registration_date DESC
-                          LIMIT 5");
+                          LIMIT 10");
     $stmt->execute([$user_id]);
     $recent_regs = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

@@ -48,15 +48,23 @@ try {
         die(json_encode(['success' => false, 'message' => 'Sorry, this event is already full.']));
     }
 
-    // 3. Perform registration
+    // 3. Extract and validate additional details
+    $full_name  = trim($_POST['full_name']  ?? '');
+    $course     = trim($_POST['course']     ?? '');
+    $branch     = trim($_POST['branch']     ?? '');
+    $phone      = trim($_POST['phone']      ?? '');
+    $student_id = trim($_POST['student_id'] ?? '');
+
+    if (empty($full_name) || empty($course) || empty($branch) || empty($phone) || empty($student_id)) {
+        die(json_encode(['success' => false, 'message' => 'Please fill in all student details.']));
+    }
+
+    // 4. Perform registration
     $pdo->beginTransaction();
     
-    $stmt = $pdo->prepare("INSERT INTO registrations (user_id, event_id) VALUES (?, ?)");
-    $stmt->execute([$user_id, $event_id]);
+    $stmt = $pdo->prepare("INSERT INTO registrations (user_id, event_id, full_name, course, branch, phone, student_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
+    $stmt->execute([$user_id, $event_id, $full_name, $course, $branch, $phone, $student_id]);
     
-    $stmt = $pdo->prepare("UPDATE events SET registered_count = registered_count + 1 WHERE id = ?");
-    $stmt->execute([$event_id]);
-
     $pdo->commit();
 
     echo json_encode(['success' => true, 'message' => 'Successfully registered for: ' . $event['name']]);

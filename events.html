@@ -310,6 +310,43 @@
   </div>
 
   <script src="js/main.js"></script>
-  <script src="js/events.js"></script>
+  <script src="js/main.js"></script>
+
+  <!-- Registration Modal -->
+  <div class="modal-overlay" id="regModal">
+    <div class="modal" style="max-width: 500px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h3 id="regEventTitle" style="font-weight:800; font-size:1.4rem;">Register for Event</h3>
+        <button class="btn-ghost" onclick="document.getElementById('regModal').classList.remove('active')" style="padding:4px 8px; font-size:1.2rem;">✕</button>
+      </div>
+      <form id="regForm" style="display:flex; flex-direction:column; gap:16px;">
+        <input type="hidden" id="regEventId">
+        <div class="form-group">
+          <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">Full Name</label>
+          <input type="text" id="regFullName" required placeholder="Enter your full name" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">Course</label>
+            <input type="text" id="regCourse" required placeholder="e.g. B.Tech" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+          </div>
+          <div class="form-group">
+            <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">Branch</label>
+            <input type="text" id="regBranch" required placeholder="e.g. CSE" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+          </div>
+        </div>
+        <div class="form-group">
+          <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">Student ID / Roll No</label>
+          <input type="text" id="regStudentId" required placeholder="Enter your official ID" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+        </div>
+        <div class="form-group">
+          <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">Phone Number</label>
+          <input type="tel" id="regPhone" required placeholder="Enter your contact number" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+        </div>
+        <button type="submit" class="btn btn-primary" style="padding:12px; margin-top:8px;">Confirm Registration</button>
+      </form>
+    </div>
+  </div>
+
 </body>
 </html>

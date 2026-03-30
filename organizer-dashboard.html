@@ -165,8 +165,9 @@
         EventHub
       </a>
       <ul class="navbar-menu" id="navbarMenu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="events.html">Events</a></li>
         <li><a href="organizer-dashboard.html" class="active">Dashboard</a></li>
-        <li><a href="events.html">Browse Events</a></li>
         <li><a href="#" id="logoutBtn" style="color:var(--color-error)">Logout</a></li>
       </ul>
       <div style="display:flex; align-items:center; gap:12px;">
@@ -191,7 +192,7 @@
         <a href="#profile" class="sidebar-nav-item" onclick="showSection('profile', this)">
           <span>⚙️</span><span>Settings</span>
         </a>
-        <a href="login.html" class="sidebar-nav-item" style="margin-top:auto; color:rgba(239,68,68,0.8);">
+        <a href="login.html" class="sidebar-nav-item" style="margin-top:12px; border-top:1px solid rgba(255,255,255,0.05); padding-top:12px; color:rgba(239,68,68,0.8);">
           <span>🚪</span><span>Logout</span>
         </a>
       </nav>
@@ -353,7 +354,9 @@
         <div class="data-table-container">
           <table class="data-table">
             <thead>
-              <tr><th>Student</th><th>Event</th><th>Registered On</th><th>Status</th></tr>
+            <thead>
+              <tr><th>Student Name</th><th>Student ID</th><th>Course/Branch</th><th>Event</th><th>Phone Number</th><th>Registered On</th></tr>
+            </thead>
             </thead>
             <tbody id="recentRegistrations">
               <!-- Dynamically loaded -->
@@ -512,14 +515,16 @@
             // 3. Recent Regs
             const regsBody = document.getElementById('recentRegistrations');
             if (data.recent_regs.length === 0) {
-                regsBody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color:#6b7280;">No recent registrations.</td></tr>';
+                regsBody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px; color:#6b7280;">No registrations yet.</td></tr>';
             } else {
                 regsBody.innerHTML = data.recent_regs.map(r => `
                     <tr>
-                        <td><strong>${r.first_name} ${r.last_name}</strong><br><span style="font-size:0.78rem;color:#6b7280;">${r.email}</span></td>
-                        <td>${r.event_name}</td>
-                        <td>${new Date(r.registration_date).toLocaleDateString()}</td>
-                        <td><span class="badge badge-success">Confirmed</span></td>
+                        <td><strong>${r.full_name}</strong></td>
+                        <td><code style="background:rgba(108,99,255,0.1); padding:2px 6px; border-radius:4px; font-size:0.85rem;">${r.student_id}</code></td>
+                        <td><span style="font-size:0.9rem;">${r.course}</span><br><span style="font-size:0.78rem;color:#6b7280;">${r.branch}</span></td>
+                        <td><strong>${r.event_name}</strong></td>
+                        <td>${r.phone}</td>
+                        <td>${new Date(r.registration_date).toLocaleDateString('en-IN', {day:'numeric', month:'short'})}</td>
                     </tr>
                 `).join('');
             }
@@ -549,6 +554,9 @@
 
     // Initial load
     loadOrganizerDashboard();
+
+    // Live Polling - every 10 seconds
+    setInterval(loadOrganizerDashboard, 10000);
   </script>
 </body>
 </html>

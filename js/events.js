@@ -107,73 +107,10 @@
       const eventId = btn.dataset.id;
       const eventName = btn.dataset.name || 'this event';
 
-      // 1. Check session via get_session.php
-      fetch('php/get_session.php')
-        .then(res => res.json())
-        .then(data => {
-          if (data.loggedIn && data.role === 'student') {
-
-            // TWO-CLICK REGISTRATION FLOW (Replaces native confirm)
-            if (btn.dataset.state !== 'confirming') {
-              // Click 1: Ask for confirmation
-              btn.dataset.state = 'confirming';
-              btn.dataset.originalText = btn.textContent;
-              btn.textContent = 'Confirm?';
-              btn.style.background = '#10b981'; // Success green
-
-              // Revert after 3 seconds if not clicked
-              setTimeout(() => {
-                if (btn.dataset.state === 'confirming') {
-                  btn.dataset.state = '';
-                  btn.textContent = btn.dataset.originalText;
-                  btn.style.background = '';
-                }
-              }, 3000);
-              return;
-            }
-
-            // Click 2: Proceed with registration
-            btn.disabled = true;
-            btn.textContent = '⏳ ...';
-            btn.dataset.state = '';
-
-            const fd = new FormData();
-            fd.append('event_id', eventId);
-
-            fetch('php/event_register.php', { method: 'POST', body: fd })
-              .then(res => res.json())
-              .then(result => {
-                if (result.success) {
-                  showToast(result.message, 'success');
-                  btn.textContent = 'Registered';
-                  btn.classList.add('btn-ghost');
-                  btn.classList.remove('btn-primary');
-                  btn.style.background = '';
-                } else {
-                  showToast(result.message, 'error');
-                  btn.disabled = false;
-                  btn.textContent = 'Register';
-                  btn.style.background = '';
-                }
-              })
-              .catch(() => {
-                showToast('Registration failed.', 'error');
-                btn.disabled = false;
-                btn.textContent = 'Register';
-                btn.style.background = '';
-              });
-          } else {
-            // Not logged in -> show modal
-            if (modalName) modalName.textContent = eventName;
-            if (registerModal) registerModal.classList.add('active');
-          }
-        })
-        .catch(err => {
-          console.error('Session check failed:', err);
-          // Fallback to modal
-          if (modalName) modalName.textContent = eventName;
-          if (registerModal) registerModal.classList.add('active');
-        });
+      // Open the global registration modal
+      if (window.openRegisterModal) {
+        window.openRegisterModal(eventId, eventName);
+      }
     });
   }
 

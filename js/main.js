@@ -171,43 +171,57 @@ function initStats() {
     .then(res => res.json())
     .then(data => {
       if (data.loggedIn) {
-        // Find existing Login/Register links
-        const loginLink    = menu.querySelector('a[href="login.html"]')?.parentElement;
-        const registerLink = menu.querySelector('a[href="register.html"]')?.parentElement;
+        // Find existing Login/Register links and remove
+        menu.querySelectorAll('a[href="login.html"], a[href="register.html"]').forEach(a => a.parentElement.remove());
 
-        if (loginLink) loginLink.remove();
-        if (registerLink) registerLink.remove();
-
-        // Handle Dashboard Link
-        const dashboardMap = { student: 'student-dashboard.html', organizer: 'organizer-dashboard.html', admin: 'admin-dashboard.html' };
-        const dashUrl = dashboardMap[data.role] || 'student-dashboard.html';
-        
-        let dashLink = menu.querySelector('a[href="student-dashboard.html"], a[href="organizer-dashboard.html"], a.active');
-        
-        if (dashLink) {
-            // Already has a dashboard link, just ensure it points to the right place
-            dashLink.href = dashUrl;
-            dashLink.textContent = 'Dashboard'; 
-        } else {
-            // Create new Dashboard link
-            const dashLi = document.createElement('li');
-            dashLi.innerHTML = `<a href="${dashUrl}">Dashboard</a>`;
-            menu.appendChild(dashLi);
+        // Ensure "Home" is there
+        if (!menu.querySelector('a[href="index.html"]')) {
+            const homeLi = document.createElement('li');
+            homeLi.innerHTML = `<a href="index.html">Home</a>`;
+            menu.prepend(homeLi);
         }
 
-        // Handle Logout Link (Avoid duplicates)
+        // Ensure "Events" is there
+        if (!menu.querySelector('a[href="events.html"]')) {
+            // Insert after Home or at the start
+            const eventsLi = document.createElement('li');
+            eventsLi.innerHTML = `<a href="events.html">Events</a>`;
+            const homeLink = menu.querySelector('a[href="index.html"]')?.parentElement;
+            if (homeLink) homeLink.after(eventsLi);
+            else menu.prepend(eventsLi);
+        }
+
+        // Handle Dashboard Link
+        const dashUrlMap = { student: 'student-dashboard.html', organizer: 'organizer-dashboard.html', admin: 'admin-dashboard.html' };
+        const userDashUrl = dashUrlMap[data.role] || 'student-dashboard.html';
+        
+        const existingDashLink = menu.querySelector('a[href*="dashboard.html"]');
+        if (existingDashLink) {
+            existingDashLink.href = userDashUrl;
+            existingDashLink.textContent = 'Dashboard';
+        } else {
+            const dashLi = document.createElement('li');
+            dashLi.innerHTML = `<a href="${userDashUrl}">Dashboard</a>`;
+            // Insert before Logout or at the end
+            const logoutBtn = menu.querySelector('#logoutBtn')?.parentElement;
+            if (logoutBtn) logoutBtn.before(dashLi);
+            else menu.appendChild(dashLi);
+        }
+
+        // Handle Logout Link
         if (!menu.querySelector('#logoutBtn')) {
             const logoutLi = document.createElement('li');
             logoutLi.innerHTML = `<a href="#" id="logoutBtn" style="color:#ef4444; font-weight:700;">Logout</a>`;
             menu.appendChild(logoutLi);
         }
 
-        // Mark active if on dashboard
-        const path = window.location.pathname.split('/').pop() || 'index.html';
-        if (path === dashUrl) {
-            const dashLink = menu.querySelector(`a[href="${dashUrl}"]`);
-            if (dashLink) dashLink.classList.add('active');
-        }
+        // Set Active State based on URL
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        menu.querySelectorAll('a').forEach(a => {
+            const href = a.getAttribute('href');
+            if (href === currentPage) a.classList.add('active');
+            else a.classList.remove('active');
+        });
       }
     })
     .catch(err => console.error('Session check failed:', err));
@@ -274,5 +288,77 @@ document.querySelectorAll('.modal-overlay').forEach(overlay => {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') {
     document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+  }
+});
+
+// ===== GLOBAL EVENT REGISTRATION =====
+window.openRegisterModal = function (eventId, eventName) {
+  const modal = document.getElementById('regModal');
+  const title = document.getElementById('regEventTitle');
+  const idInput = document.getElementById('regEventId');
+  if (!modal) return;
+
+  fetch('php/get_session.php')
+    .then(res => res.json())
+    .then(data => {
+      if (data.loggedIn && data.role === 'student') {
+        if (title) title.textContent = `Register for ${eventName}`;
+        if (idInput) idInput.value = eventId;
+        modal.classList.add('active');
+      } else if (!data.loggedIn) {
+        showToast('Please login to register for events.', 'info');
+        setTimeout(() => window.location.href = 'login.html', 1500);
+      } else {
+        showToast('Only students can register for events.', 'warning');
+      }
+    });
+};
+
+// Handle Registration Form Submission
+document.addEventListener('submit', async (e) => {
+  if (e.target && e.target.id === 'regForm') {
+    e.preventDefault();
+    const form = e.target;
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const eventIdInput = document.getElementById('regEventId');
+    if (!eventIdInput) return;
+    
+    const eventId = eventIdInput.value;
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Processing...';
+
+    try {
+      const fd = new FormData();
+      fd.append('event_id', eventId);
+      fd.append('full_name', document.getElementById('regFullName').value);
+      fd.append('course', document.getElementById('regCourse').value);
+      fd.append('branch', document.getElementById('regBranch').value);
+      fd.append('phone', document.getElementById('regPhone').value);
+      fd.append('student_id', document.getElementById('regStudentId').value);
+
+      const res = await fetch('php/event_register.php', { method: 'POST', body: fd });
+      const data = await res.json();
+
+      if (data.success) {
+        showToast(data.message, 'success');
+        document.getElementById('regModal').classList.remove('active');
+        form.reset();
+        // Refresh local event cards if they exist
+        if (typeof fetchEvents === 'function') fetchEvents();
+        
+        // Refresh Featured Events in index.html
+        const grid = document.getElementById('featuredGrid');
+        if (grid && window.fetchFeaturedEvents) window.fetchFeaturedEvents();
+        
+      } else {
+        showToast(data.message, 'error');
+      }
+    } catch (err) {
+      showToast('Registration failed. Please try again.', 'error');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Confirm Registration';
+    }
   }
 });

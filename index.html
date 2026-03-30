@@ -367,10 +367,28 @@
       font-weight: 800;
       color: white;
       letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
     
     .navbar.scrolled .logo, .navbar.solid .logo {
         color: var(--color-gray-900)!important;
+    }
+
+    .feature-card h3, .feature-card p {
+      color: #ffffff; /* Explicitly ensure contrast on dark cards */
+    }
+
+    .slide-element {
+      opacity: 0;
+      transform: translateX(100px);
+      transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    .slide-element.visible {
+      opacity: 1;
+      transform: translateX(0);
     }
   </style>
 </head>
@@ -401,31 +419,27 @@
 
   <!-- Announcement Ticker -->
   <div class="ticker-wrap" style="margin-top:80px;">
-    <div class="ticker-content">
-      🎉 Annual Cultural Fest 2026 – March 20 | Register Now! &nbsp;&nbsp;&nbsp;
-      🤖 AI & ML Workshop – Feb 19 | Limited Seats! &nbsp;&nbsp;&nbsp;
-      🏆 Inter-Department Sports Tournament – March 25 | All Teams Welcome! &nbsp;&nbsp;&nbsp;
-      💻 Hackathon 2026 – March 28-29 | Build the Future! &nbsp;&nbsp;&nbsp;
-      🔐 Cyber Security Seminar – Feb 28 | Sign Up Free! &nbsp;&nbsp;&nbsp;
+    <div class="ticker-content" id="dynamicTicker">
+      🎉 Fetching latest campus updates... &nbsp;&nbsp;&nbsp;
     </div>
   </div>
 
   <!-- Hero Section -->
   <section class="video-bg" style="margin-top:0; height: calc(100vh - 80px - 40px);">
     <iframe
-      src="https://www.youtube.com/embed/K9HiKoxpCcg?autoplay=1&mute=1&loop=1&playlist=K9HiKoxpCcg&controls=0&modestbranding=1&showinfo=0"
+      src="https://www.youtube.com/embed/K9HiKoxpCcg?autoplay=1&mute=1&loop=1&playlist=K9HiKoxpCcg&controls=0&modestbranding=1&showinfo=0&vq=hd1080"
       frameborder="0"
       allow="autoplay; encrypted-media"
       allowfullscreen
       title="Hero Background Video">
     </iframe>
-    <div class="overlay" style="background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.4) 100%); backdrop-filter: saturate(120%) blur(4px);"></div>
+    <div class="overlay" style="background: linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%); backdrop-filter: saturate(120%) blur(0px);"></div>
     <div class="content">
       <div
-        style="display:inline-block; background:rgba(108,99,255,0.2); border:1px solid rgba(108,99,255,0.5); border-radius:50px; padding:6px 18px; font-size:0.85rem; color:rgba(255,255,255,0.9); margin-bottom:20px; backdrop-filter:blur(8px);">
+        style="display:inline-block; background:rgba(108,99,255,0.3); border:1px solid rgba(108,99,255,0.5); border-radius:50px; padding:6px 18px; font-size:0.85rem; color:rgba(255,255,255,1); margin-bottom:20px; backdrop-filter:blur(8px); text-shadow: 0 2px 4px rgba(0,0,0,0.3);">
         🎓 Graphic Era University – Campus Event Portal
       </div>
-      <h1 class="hero-title">Discover &amp; Join<br><span
+      <h1 class="hero-title" style="text-shadow: 0 4px 15px rgba(0,0,0,0.4);">Discover &amp; Join<br><span
           style="background:linear-gradient(135deg,#a78bfa,#f472b6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">Exciting
           College Events</span></h1>
       <p class="hero-subtitle">
@@ -434,7 +448,6 @@
       </p>
       <div class="hero-cta">
         <a href="events.html" class="btn-solid">🎯 Browse Events</a>
-        <a href="register.html" class="btn-glass">🚀 Get Started Free</a>
       </div>
     </div>
     <div class="scroll-indicator">↓</div>
@@ -618,6 +631,42 @@
 
   <script src="js/main.js"></script>
 
+  <!-- Registration Modal -->
+  <div class="modal-overlay" id="regModal">
+    <div class="modal" style="max-width: 500px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h3 id="regEventTitle" style="font-weight:800; font-size:1.4rem;">Register for Event</h3>
+        <button class="btn-ghost" onclick="document.getElementById('regModal').classList.remove('active')" style="padding:4px 8px; font-size:1.2rem;">✕</button>
+      </div>
+      <form id="regForm" style="display:flex; flex-direction:column; gap:16px;">
+        <input type="hidden" id="regEventId">
+        <div class="form-group">
+          <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">Full Name</label>
+          <input type="text" id="regFullName" required placeholder="Enter your full name" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">Course</label>
+            <input type="text" id="regCourse" required placeholder="e.g. B.Tech" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+          </div>
+          <div class="form-group">
+            <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">Branch</label>
+            <input type="text" id="regBranch" required placeholder="e.g. CSE" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+          </div>
+        </div>
+        <div class="form-group">
+          <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">Student ID / Roll No</label>
+          <input type="text" id="regStudentId" required placeholder="Enter your official ID" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+        </div>
+        <div class="form-group">
+          <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">Phone Number</label>
+          <input type="tel" id="regPhone" required placeholder="Enter your contact number" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+        </div>
+        <button type="submit" class="btn btn-primary" style="padding:12px; margin-top:8px;">Confirm Registration</button>
+      </form>
+    </div>
+  </div>
+
   <!-- ===== LIVE FEED POLLING ===== -->
   <script>
     /* ── State ── */
@@ -718,9 +767,28 @@
       } catch (e) { /* Network error – silently skip */ }
     }
 
-    /* ── Polling Log ── */
-    pollFeed();
-    setInterval(pollFeed, 5000);
+    /* ── Announcement Ticker (Dynamic) ── */
+    async function updateTicker() {
+      const ticker = document.getElementById('dynamicTicker');
+      if (!ticker) return;
+      try {
+        const res = await fetch('php/get_events.php?sort=date&limit=5');
+        const data = await res.json();
+        if (data.success && data.events.length > 0) {
+          ticker.innerHTML = data.events.map(ev => {
+              const icons = { technology: '🤖', cultural: '🎭', sports: '⚽', academic: '📚', workshop: '🛠️' };
+              const date = new Date(ev.event_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+              return `${icons[ev.category.toLowerCase()] || '📅'} ${ev.name} – ${date} | Register Now! &nbsp;&nbsp;&nbsp;`;
+          }).join(' ') + data.events.map(ev => {
+              const icons = { technology: '🤖', cultural: '🎭', sports: '⚽', academic: '📚', workshop: '🛠️' };
+              const date = new Date(ev.event_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+              return `${icons[ev.category.toLowerCase()] || '📅'} ${ev.name} – ${date} &nbsp;&nbsp;&nbsp;`;
+          }).join(' ');
+        }
+      } catch (e) {
+        ticker.innerHTML = "🎉 Welcome to EventHub – Discover the latest campus events!";
+      }
+    }
 
     /* ── Featured Events (Fresh load from DB) ── */
     async function fetchFeaturedEvents() {
@@ -731,7 +799,7 @@
         const res = await fetch('php/get_events.php?sort=date&limit=3');
         const data = await res.json();
         if (data.success && data.events.length > 0) {
-          grid.innerHTML = data.events.slice(0, 3).map(ev => {
+          grid.innerHTML = data.events.slice(0, 3).map((ev, index) => {
             const icons = { technology: '🤖', cultural: '🎭', sports: '⚽', academic: '📚', workshop: '🛠️' };
             const icon = icons[ev.category.toLowerCase()] || '📅';
             const date = new Date(ev.event_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -739,7 +807,7 @@
             const pct = Math.min(100, Math.round((ev.registered_count / (ev.max_capacity || 100)) * 100));
 
             return `
-              <div class="event-card">
+              <div class="event-card slide-element" style="transition-delay: ${index * 0.15}s;">
                 <div class="event-card-image ${catClass}">
                   <span class="event-category-badge">${ev.category}</span>
                   ${icon}
@@ -763,12 +831,32 @@
                   </div>
 
                   <div class="register-btn-wrap">
-                    <a href="login.html" class="btn btn-primary btn-sm" style="width:100%">Register Now</a>
+                    <a href="javascript:void(0)" 
+                       onclick="openRegisterModal('${ev.id}', '${ev.name.replace(/'/g, "\\'")}')" 
+                       class="btn btn-primary btn-sm" 
+                       style="width:100%">
+                       Register Now
+                    </a>
                   </div>
                 </div>
               </div>
             `;
           }).join('');
+
+          // Observe dynamically loaded elements to trigger animation exactly when scrolled into view
+          const observer = new IntersectionObserver((entries, obs) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                obs.unobserve(entry.target);
+                // Remove transition-delay after animation finishes so hover effects stay instant
+                setTimeout(() => { entry.target.style.transitionDelay = '0s'; }, 800);
+              }
+            });
+          }, { threshold: 0.15 });
+
+          grid.querySelectorAll('.slide-element').forEach(el => observer.observe(el));
+          
         } else {
           grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #6b7280; padding: 40px 0;">No events currently active.</div>';
         }
@@ -777,6 +865,13 @@
       }
     }
     fetchFeaturedEvents();
+    updateTicker();
+    
+    // Live feed polling
+    if (document.getElementById('liveFeedSection')) {
+      pollFeed();
+      setInterval(pollFeed, 5000);
+    }
   </script>
 </body>
 
