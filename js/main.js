@@ -178,18 +178,29 @@ function initStats() {
         if (loginLink) loginLink.remove();
         if (registerLink) registerLink.remove();
 
-        // Create Dashboard link
+        // Handle Dashboard Link
         const dashboardMap = { student: 'student-dashboard.html', organizer: 'organizer-dashboard.html', admin: 'admin-dashboard.html' };
         const dashUrl = dashboardMap[data.role] || 'student-dashboard.html';
+        
+        let dashLink = menu.querySelector('a[href="student-dashboard.html"], a[href="organizer-dashboard.html"], a.active');
+        
+        if (dashLink) {
+            // Already has a dashboard link, just ensure it points to the right place
+            dashLink.href = dashUrl;
+            dashLink.textContent = 'Dashboard'; 
+        } else {
+            // Create new Dashboard link
+            const dashLi = document.createElement('li');
+            dashLi.innerHTML = `<a href="${dashUrl}">Dashboard</a>`;
+            menu.appendChild(dashLi);
+        }
 
-        const dashLi = document.createElement('li');
-        dashLi.innerHTML = `<a href="${dashUrl}">My Dashboard</a>`;
-        menu.appendChild(dashLi);
-
-        // Create Logout Link
-        const logoutLi = document.createElement('li');
-        logoutLi.innerHTML = `<a href="#" id="logoutBtn" style="color:#ef4444; font-weight:700;">Logout</a>`;
-        menu.appendChild(logoutLi);
+        // Handle Logout Link (Avoid duplicates)
+        if (!menu.querySelector('#logoutBtn')) {
+            const logoutLi = document.createElement('li');
+            logoutLi.innerHTML = `<a href="#" id="logoutBtn" style="color:#ef4444; font-weight:700;">Logout</a>`;
+            menu.appendChild(logoutLi);
+        }
 
         // Mark active if on dashboard
         const path = window.location.pathname.split('/').pop() || 'index.html';

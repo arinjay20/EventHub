@@ -26,7 +26,13 @@
       box-shadow:0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.08);
       animation: fadeInUp 0.5s ease;
     }
-    .form-logo { font-family:'Poppins',sans-serif; font-size:1.8rem; font-weight:800; background:linear-gradient(135deg,#6c63ff,#f5576c); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:6px; }
+    .form-logo { 
+      font-family:'Poppins',sans-serif; font-size:1.8rem; font-weight:800; 
+      display:flex; align-items:center; gap:10px; margin-bottom:6px; 
+    }
+    .form-logo span {
+      background:linear-gradient(135deg,#6c63ff,#f5576c); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    }
     .form-subtitle { color:#6b7280; font-size:0.9rem; margin-bottom:24px; }
 
     .input-group { margin-bottom:14px; position:relative; }
@@ -56,7 +62,10 @@
   <a href="index.html" class="back-home">← Back to Home</a>
 
   <div class="reg-card">
-    <div class="form-logo">⚡ EventHub</div>
+    <div class="form-logo">
+      <img src="https://geu.ac.in/wp-content/uploads/2023/03/geu_white.svg" alt="GEU Logo" style="height: 40px; width: auto; filter: invert(1);"> 
+      <span>EventHub</span>
+    </div>
     <p class="form-subtitle">Create your free account and start exploring events!</p>
 
     <form id="registerForm" action="php/register.php" method="POST" novalidate>

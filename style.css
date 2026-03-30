@@ -170,7 +170,7 @@ h1, h2, h3, h4, h5 {
 .navbar.scrolled,
 .navbar.solid {
   background: #0f172a; /* Solid Deep Navy */
-  height: 72px;
+  height: 80px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 4px 30px rgba(0,0,0,0.15);
 }
@@ -769,7 +769,8 @@ h1, h2, h3, h4, h5 {
 /* ===== DASHBOARD LAYOUT ===== */
 .Dashboard-layout {
   display: flex;
-  min-height: 100vh;
+  min-height: calc(100vh - 80px); /* Adjust for fixed navbar height */
+  margin-top: 80px; /* Offset for fixed navbar */
   background: var(--color-gray-100);
 }
 
@@ -783,6 +784,9 @@ h1, h2, h3, h4, h5 {
   transition: all 0.4s ease;
   flex-shrink:0;
   z-index: 100;
+  position: sticky;
+  top: 80px;
+  height: calc(100vh - 80px);
 }
 
 .profile-avatar {
@@ -796,7 +800,7 @@ h1, h2, h3, h4, h5 {
   font-size: 1.5rem;
   font-weight: 700;
   color: white;
-  margin-bottom: var(--space-md);
+  margin: 0 auto var(--space-md);
 }
 
 .dashboard-sidebar h3 { font-size: 1rem; margin-bottom: 4px; }
