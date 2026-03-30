@@ -1204,32 +1204,28 @@ h1, h2, h3, h4, h5 {
 
 /* ===== CROPPER MODAL STYLES ===== */
 .cropper-modal {
+  width: 95% !important; /* Full width on mobile */
   max-width: 650px !important;
-  background: #111827 !important; /* Premium Dark Navy */
-  border: 3px solid var(--color-primary) !important; /* Very thick indigo border */
+  background: #111827 !important;
+  border: 3px solid var(--color-primary) !important;
   box-shadow: 0 0 40px rgba(108, 99, 255, 0.4);
   color: #ffffff;
   padding: 40px !important;
+  max-height: 95vh; /* Ensure it fits on screen */
+  overflow-y: auto;
 }
 
 .cropper-modal .modal-header h2 {
-  color: var(--color-primary) !important; /* Indigo title for pop */
+  color: var(--color-primary) !important;
   font-size: 1.8rem !important;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
-.cropper-modal .modal-close {
-  background: rgba(255, 255, 255, 0.1);
-  color: #ffffff;
-  width: 44px;
-  height: 44px;
-  font-size: 1.5rem;
-}
-
 .cropper-image-container {
   width: 100%;
   height: 450px;
+  max-height: 50vh; /* Responsive height limit */
   background-color: #000;
   margin: 32px 0;
   border-radius: var(--radius-lg);
@@ -1237,24 +1233,45 @@ h1, h2, h3, h4, h5 {
   border: 2px solid rgba(255, 255, 255, 0.15);
 }
 
-.cropper-controls {
-  display: flex;
-  justify-content: flex-end;
-  gap: 20px;
-  padding-top: 20px;
+/* ===== RESPONSIVE ADJUSTMENTS ===== */
+@media (max-width: 768px) {
+  .cropper-modal {
+    padding: 24px !important;
+    width: 90% !important;
+  }
+  
+  .cropper-modal .modal-header h2 {
+    font-size: 1.3rem !important;
+  }
+  
+  .cropper-image-container {
+    height: 350px;
+    margin: 20px 0;
+  }
+  
+  .cropper-controls {
+    flex-direction: column-reverse; /* Stack buttons on small screens */
+    gap: 12px;
+  }
+  
+  .cropper-controls button {
+    width: 100% !important;
+    padding: 12px !important;
+    font-size: 1rem !important;
+  }
 }
 
-.cropper-controls .btn-primary {
-  padding: 14px 40px !important;
-  font-size: 1.1rem !important;
-  font-weight: 800 !important;
+@media (max-width: 480px) {
+  .cropper-modal {
+    padding: 16px !important;
+    width: 95% !important;
+  }
+  
+  .cropper-image-container {
+    height: 300px;
+  }
 }
 
-.cropper-controls .btn-outline {
-  padding: 14px 40px !important;
-  font-size: 1.1rem !important;
-  border-color: rgba(255, 255, 255, 0.3) !important;
-}
 
 /* ===== CROPPING UI (THE SQUARES/LINES) ===== */
 .cropper-view-box {
