@@ -235,7 +235,7 @@
   // ===== INIT =====
   fetchEvents();
 
-  // Re-link filters to fetch instead of just DOM filtering
+
   pills.forEach(pill => {
     pill.addEventListener('click', () => {
       // activeFilter set in existing pill listener
