@@ -23,7 +23,7 @@ try {
     }
 
     /* ---- User profile ---- */
-    $stmt = $pdo->prepare("SELECT id, first_name, last_name, email, role, department FROM users WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT id, first_name, last_name, email, role, department, profile_pic FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 

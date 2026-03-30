@@ -362,3 +362,133 @@ document.addEventListener('submit', async (e) => {
     }
   }
 });
+
+// ===== PROFILE PHOTO CROPPER (GLOBAL) =====
+(function () {
+    let cropper = null;
+    let selectedFile = null;
+
+    // 1. Inject Cropper Modal HTML
+    const modalHTML = `
+      <div id="cropperModal" class="modal-overlay">
+        <div class="modal cropper-modal">
+          <div class="modal-header">
+            <h2 style="font-weight:800; font-size:1.4rem;">Adjust Your Photo</h2>
+            <button class="modal-close" onclick="document.getElementById('cropperModal').classList.remove('active')">&times;</button>
+          </div>
+          <div class="cropper-image-container">
+            <img id="cropperImage" src="" alt="To wrap">
+          </div>
+          <div class="cropper-controls">
+            <button class="btn btn-outline btn-sm" onclick="document.getElementById('cropperModal').classList.remove('active')" style="color:var(--color-gray-700); border-color:var(--color-gray-300);">Cancel</button>
+            <button id="saveCroppedBtn" class="btn btn-primary btn-sm">Save Photo</button>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        const div = document.createElement('div');
+        div.innerHTML = modalHTML;
+        document.body.appendChild(div.firstElementChild);
+
+        document.getElementById('saveCroppedBtn').addEventListener('click', () => {
+            if (!cropper) return;
+            
+            const btn = document.getElementById('saveCroppedBtn');
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            // Get cropped canvas
+            const canvas = cropper.getCroppedCanvas({
+                width: 400,
+                height: 400,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+            });
+
+            canvas.toBlob((blob) => {
+                const formData = new FormData();
+                formData.append('avatar', blob, selectedFile.name);
+
+                fetch('php/upload_avatar.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        showToast('Profile picture updated!', 'success');
+                        document.getElementById('cropperModal').classList.remove('active');
+                        
+                        // Update UI avatars
+                        const timestamp = new Date().getTime();
+                        const newUrl = `${data.profile_pic}?t=${timestamp}`;
+                        
+                        document.querySelectorAll('.profile-avatar').forEach(el => {
+                            el.style.backgroundImage = `url('${newUrl}')`;
+                            el.textContent = '';
+                        });
+                        
+                        // If there's a specialized function to reload dashboard data, call it
+                        if (typeof loadDashboard === 'function') loadDashboard();
+                        if (typeof initializePage === 'function') initializePage();
+
+                    } else {
+                        showToast(data.message || 'Upload failed', 'error');
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    showToast('Server error uploading image', 'error');
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                    btn.textContent = 'Save Photo';
+                });
+            }, 'image/webp', 0.9);
+        });
+    });
+
+    // 2. Define global uploadAvatar
+    window.uploadAvatar = function (input) {
+        if (!input.files || !input.files[0]) return;
+        
+        selectedFile = input.files[0];
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            const modal = document.getElementById('cropperModal');
+            const image = document.getElementById('cropperImage');
+            
+            image.src = e.target.result;
+            modal.classList.add('active');
+
+            // Destroy previous instance
+            if (cropper) {
+                cropper.destroy();
+            }
+
+            // Init Cropper.js
+            cropper = new Cropper(image, {
+                aspectRatio: 1, // Square
+                viewMode: 2,    // Contain within canvas
+                dragMode: 'move',
+                autoCropArea: 0.8,
+                restore: false,
+                guides: true,
+                center: true,
+                highlight: false,
+                cropBoxMovable: true,
+                cropBoxResizable: true,
+                toggleDragModeOnDblclick: false,
+            });
+        };
+
+        reader.readAsDataURL(selectedFile);
+        
+        // Reset input value so same file can be selected again
+        input.value = '';
+    };
+})();
+

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Achievements – EventHub</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Cropper.js CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css" />
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background: var(--color-gray-100); color: var(--color-gray-900); }
+
+    /* ── Achievements Stats Row ── */
+    .achieve-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .achieve-stat-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid var(--color-gray-300);
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .achieve-stat-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      background: rgba(108, 99, 255, 0.1);
+      color: var(--color-primary);
+    }
+    .achieve-stat-info h3 { font-size: 2.2rem; font-weight: 800; color: var(--color-gray-900); margin-bottom: -4px; }
+    .achieve-stat-info p { font-size: 0.85rem; color: var(--color-gray-600); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* ── Certificate Grid ── */
+    .certificate-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .certificate-card {
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+      border-radius: 24px;
+      border: 1px solid var(--color-gray-300);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      position: relative;
+      overflow: hidden;
+      padding: 32px;
+      text-align: center;
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    .certificate-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      border-color: #ffd700;
+    }
+
+    /* Glow overlays for premium feel */
+    .cert-glow {
+      position: absolute;
+      top: -50px; left: -50px;
+      width: 150px; height: 150px;
+      background: radial-gradient(circle, rgba(255,215,0,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .cert-glow-2 {
+      position: absolute;
+      bottom: -40px; right: -40px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(108,99,255,0.08) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .cert-ribbon {
+      width: 70px;
+      height: 70px;
+      background: linear-gradient(135deg, #fbbf24, #d97706);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: white;
+      box-shadow: 0 8px 16px rgba(217, 119, 6, 0.3);
+      border: 4px solid white;
+      z-index: 1;
+    }
+    .cert-ribbon.silver { background: linear-gradient(135deg, #e5e7eb, #9ca3af); box-shadow: 0 8px 16px rgba(156, 163, 175, 0.3); }
+    .cert-ribbon.bronze { background: linear-gradient(135deg, #fca5a5, #b91c1c); box-shadow: 0 8px 16px rgba(185, 28, 28, 0.3); }
+
+    .cert-title { font-size: 1.5rem; font-weight: 800; color: var(--color-gray-900); }
+    .cert-subtitle { font-size: 0.9rem; color: var(--color-gray-600); font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+
+    .cert-event-name { font-size: 1.2rem; font-weight: 700; color: var(--color-primary); background: rgba(108,99,255,0.05); padding: 8px 16px; border-radius: 12px; margin-top: 8px; }
+    
+    .cert-footer {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px dashed var(--color-gray-300);
+      font-size: 0.85rem;
+      color: var(--color-gray-500);
+      font-weight: 600;
+    }
+
+    /* Print styling */
+    .print-btn {
+      background: white; border: 2px solid var(--color-gray-300); padding: 8px 16px; border-radius: 50px; font-weight: 700; font-size: 0.85rem; cursor: pointer; color: var(--color-gray-700); transition: var(--transition);
+      position: absolute; top: 20px; right: 20px; z-index: 2;
+    }
+    .print-btn:hover { border-color: var(--color-primary); color: var(--color-primary); }
+
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar solid" id="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="navbar-brand">
+        <img src="https://geu.ac.in/wp-content/uploads/2023/03/geu_white.svg" alt="GEU Logo" style="height: 45px; width: auto; vertical-align: middle; margin-right: 12px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.15));">
+        EventHub
+      </a>
+      <ul class="navbar-menu" id="navbarMenu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="student-dashboard.html" class="active">Dashboard</a></li>
+        <li><a href="#" id="logoutBtn" style="color:var(--color-error)">Logout</a></li>
+      </ul>
+      <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+    </div>
+  </nav>
+
+  <div class="Dashboard-layout">
+    <aside class="dashboard-sidebar">
+      <div style="text-align:center; padding: 24px 0 32px; border-bottom:1px solid rgba(255,255,255,0.05); margin-bottom: 24px;">
+        <div class="avatar-wrapper" onclick="document.getElementById('avatarUpload').click();" title="Change Profile Picture">
+          <div id="sideAvatar" class="profile-avatar">S</div>
+          <div class="avatar-edit-overlay">📷</div>
+          <input type="file" id="avatarUpload" accept="image/png, image/jpeg, image/webp" style="display:none;" onchange="uploadAvatar(this)">
+        </div>
+        <h4 id="sidebarName" style="font-weight: 800; font-size: 1.1rem; letter-spacing: -0.5px;">Student</h4>
+        <p id="sidebarDept" style="font-size: 0.8rem; opacity: 0.7; font-weight: 500; margin-top: 4px;">Department</p>
+        <div style="margin-top: 15px;">
+          <span id="sidebarRole" class="role-badge" style="background: rgba(108, 99, 255, 0.2); color: #fff; padding: 4px 12px; border-radius: 50px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; border: 1px solid rgba(255,255,255,0.1);">STUDENT</span>
+        </div>
+      </div>
+      <nav class="sidebar-nav" style="display: flex; flex-direction: column; gap: 4px;">
+        <a href="student-dashboard.html" class="sidebar-nav-item"><span style="font-size: 1.1rem;">📊</span><span>Overview</span></a>
+        <a href="events.html" class="sidebar-nav-item"><span style="font-size: 1.1rem;">🔍</span><span>Browse Events</span></a>
+        <a href="my-registrations.html" class="sidebar-nav-item"><span style="font-size: 1.1rem;">📅</span><span>My Registrations</span></a>
+        <a href="achievements.html" class="sidebar-nav-item active"><span style="font-size: 1.1rem;">🏆</span><span>Achievements</span></a>
+
+        <div style="margin-top: 12px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px;">
+          <a href="login.html" class="sidebar-nav-item" style="color: #ef4444;"><span style="font-size: 1.1rem;">🚪</span><span>Logout</span></a>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="dashboard-content">
+      <header class="dashboard-header" style="margin-bottom: 32px;">
+        <h1 style="font-size: 2rem; font-weight: 800; color: var(--color-gray-900); display: flex; align-items: center; gap: 12px;">🏆 My Achievements</h1>
+        <p style="color: var(--color-gray-600); font-weight: 500; margin-top: 6px; font-size: 1.05rem;">
+          View the certificates, rankings, and honors you've earned at Graphic Era campus events.
+        </p>
+      </header>
+
+      <!-- Stats -->
+      <div class="achieve-stats">
+        <div class="achieve-stat-card">
+          <div class="achieve-stat-icon">🎓</div>
+          <div class="achieve-stat-info">
+            <h3>2</h3>
+            <p>Certificates Earned</p>
+          </div>
+        </div>
+        <div class="achieve-stat-card">
+          <div class="achieve-stat-icon" style="background: rgba(16,185,129,0.1); color: #10b981;">🎟️</div>
+          <div class="achieve-stat-info">
+            <h3 id="statReg">0</h3>
+            <p>Total Events Registered</p>
+          </div>
+        </div>
+        <div class="achieve-stat-card">
+          <div class="achieve-stat-icon" style="background: rgba(245,158,11,0.1); color: #f59e0b;">🏅</div>
+          <div class="achieve-stat-info">
+            <h3>1</h3>
+            <p>Top 3 Finishes</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Certificates Grid -->
+      <h2 style="font-size:1.3rem; font-weight: 800; color: var(--color-gray-900); margin-bottom: 24px;">Digital Certificates</h2>
+      
+      <div class="certificate-grid">
+        
+        <!-- Mock Certificate 1 -->
+        <div class="certificate-card">
+          <div class="cert-glow"></div>
+          <div class="cert-glow-2"></div>
+          <button class="print-btn" onclick="alert('Downloading Certificate PDF...')">⬇️ Download PDF</button>
+          
+          <div class="cert-ribbon">🥇</div>
+          <div>
+            <div class="cert-subtitle">Certificate of Excellence</div>
+            <div class="cert-title">1st Place Winner</div>
+          </div>
+          <p style="font-size: 0.95rem; color: var(--color-gray-700); margin-top: 8px;">For outstanding performance and securing the 1st position in</p>
+          <div class="cert-event-name">AI Robotics Workshop</div>
+          
+          <div class="cert-footer">
+            <span>📅 Issued: 15 Mar 2026</span>
+            <span>🆔 Credential: GEU-2026-X8B9</span>
+          </div>
+        </div>
+
+        <!-- Mock Certificate 2 -->
+        <div class="certificate-card" style="border-top: 4px solid #f5576c;">
+          <div class="cert-glow" style="background: radial-gradient(circle, rgba(245,87,108,0.1) 0%, transparent 70%);"></div>
+          <div class="cert-glow-2"></div>
+          <button class="print-btn" onclick="alert('Downloading Certificate PDF...')">⬇️ Download PDF</button>
+          
+          <div class="cert-ribbon silver" style="font-size: 1.5rem;">📜</div>
+          <div>
+            <div class="cert-subtitle">Certificate of Participation</div>
+            <div class="cert-title">Active Participant</div>
+          </div>
+          <p style="font-size: 0.95rem; color: var(--color-gray-700); margin-top: 8px;">For active participation and completion of the course module in</p>
+          <div class="cert-event-name">Grafest 2026</div>
+          
+          <div class="cert-footer">
+            <span>📅 Issued: 20 Feb 2026</span>
+            <span>🆔 Credential: GEU-2026-L4P2</span>
+          </div>
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Cropper.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
+  <script src="js/main.js"></script>
+  <script>
+    /* ──────────────────────────────────────────────
+       ACHIEVEMENTS PAGE
+    ────────────────────────────────────────────── */
+
+
+    async function initializePage() {
+      try {
+        const res  = await fetch('php/student_data.php', { cache: 'no-store' });
+        const data = await res.json();
+        if (!data.success) {
+            if (data.message && data.message.includes('Unauthorized')) {
+                window.location.href = 'login.html';
+                return;
+            }
+            return;
+        }
+
+        /* Sidebar Profile */
+        const u = data.user;
+        const ava = document.getElementById('sideAvatar');
+        if (u.profile_pic) {
+          ava.style.backgroundImage = `url('${u.profile_pic}')`;
+          ava.textContent = '';
+        } else {
+          ava.style.backgroundImage = 'none';
+          ava.textContent = (u.first_name[0] + u.last_name[0]).toUpperCase();
+        }
+        document.getElementById('sidebarName').textContent = u.first_name + ' ' + u.last_name;
+        document.getElementById('sidebarDept').textContent = u.department || u.email;
+
+        /* Stats (we only pull 'events_registered' since others are mocked for visual effect) */
+        const regEl = document.getElementById('statReg');
+        if(regEl) regEl.textContent = data.events_registered;
+
+      } catch (e) { 
+        console.error("Failed to load user profile");
+      }
+    }
+
+    initializePage();
+  </script>
+</body>
+</html>

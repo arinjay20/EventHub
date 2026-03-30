@@ -821,6 +821,41 @@ h1, h2, h3, h4, h5 {
   font-weight: 700;
   color: white;
   margin: 0 auto var(--space-md);
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.avatar-edit-overlay {
+  position: absolute;
+  bottom: 0px;
+  right: -5px;
+  background: var(--color-gray-900);
+  color: white;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  opacity: 0;
+  transform: translateY(5px);
+  transition: var(--transition);
+  border: 2px solid var(--color-gray-800);
+}
+
+.avatar-wrapper {
+  position: relative; 
+  width: max-content; 
+  margin: 0 auto; 
+  cursor: pointer;
+}
+
+.avatar-wrapper:hover .avatar-edit-overlay {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .dashboard-sidebar h3 { font-size: 1rem; margin-bottom: 4px; }
@@ -1166,3 +1201,88 @@ h1, h2, h3, h4, h5 {
   70% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(67, 233, 123, 0); }
   100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(67, 233, 123, 0); }
 }
+
+/* ===== CROPPER MODAL STYLES ===== */
+.cropper-modal {
+  max-width: 650px !important;
+  background: #111827 !important; /* Premium Dark Navy */
+  border: 3px solid var(--color-primary) !important; /* Very thick indigo border */
+  box-shadow: 0 0 40px rgba(108, 99, 255, 0.4);
+  color: #ffffff;
+  padding: 40px !important;
+}
+
+.cropper-modal .modal-header h2 {
+  color: var(--color-primary) !important; /* Indigo title for pop */
+  font-size: 1.8rem !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.cropper-modal .modal-close {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  width: 44px;
+  height: 44px;
+  font-size: 1.5rem;
+}
+
+.cropper-image-container {
+  width: 100%;
+  height: 450px;
+  background-color: #000;
+  margin: 32px 0;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+}
+
+.cropper-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  padding-top: 20px;
+}
+
+.cropper-controls .btn-primary {
+  padding: 14px 40px !important;
+  font-size: 1.1rem !important;
+  font-weight: 800 !important;
+}
+
+.cropper-controls .btn-outline {
+  padding: 14px 40px !important;
+  font-size: 1.1rem !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* ===== CROPPING UI (THE SQUARES/LINES) ===== */
+.cropper-view-box {
+  outline: 4px solid #6c63ff !important; /* Thick indigo crop box */
+}
+
+.cropper-face {
+  background-color: transparent !important;
+}
+
+.cropper-point {
+  background-color: #6c63ff !important; /* Solid indigo handles */
+  width: 16px !important; /* Very large handles */
+  height: 16px !important;
+  opacity: 1 !important;
+  border: 3px solid #ffffff !important;
+  border-radius: 50% !important; /* Circular handles for modern feel */
+}
+
+.cropper-bg {
+  background: #000 !important;
+}
+
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.92) !important; /* Almost total blackout for focus */
+  backdrop-filter: blur(12px) !important;
+}
+
+
+
+
