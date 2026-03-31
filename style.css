@@ -1148,17 +1148,23 @@ h1, h2, h3, h4, h5 {
 }
 
 /* ===== RESPONSIVE ===== */
-@media (max-width: 1024px) {
-  .dashboard-sidebar { width: 220px; }
+/* LAPTOP & LARGE TABLET */
+@media (max-width: 1199px) {
+  .navbar-menu { gap: var(--space-sm); }
+  .navbar-menu li a { font-size: 0.9rem; }
+  .logo, .navbar-brand { font-size: 1.35rem !important; }
 }
 
-@media (max-width: 768px) {
+/* TABLET & SMALL LAPTOP */
+@media (max-width: 991px) {
+  .dashboard-sidebar { width: 220px; }
+  
   .navbar { padding: 0 var(--space-lg); }
   .hamburger { display: flex; }
 
   .navbar-menu {
     position: fixed;
-    top: 72px;
+    top: 80px;
     left: 0;
     right: 0;
     background: #0f172a;
@@ -1167,16 +1173,13 @@ h1, h2, h3, h4, h5 {
     align-items: center;
     padding: var(--space-xl);
     gap: var(--space-lg);
-    transform: translateY(-110%);
+    transform: translateY(-150%);
     transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    z-index: 999;
   }
 
   .navbar-menu.open { transform: translateY(0); }
-
-  .section { padding: var(--space-xl) 0; }
-  .section-title { font-size: var(--font-size-3xl); }
-  .hero-title { font-size: 2.2rem; }
 
   .Dashboard-layout { flex-direction: column; }
   .dashboard-sidebar {
@@ -1184,17 +1187,29 @@ h1, h2, h3, h4, h5 {
     height: auto;
     position: static;
   }
+}
+
+/* MOBILE SETTINGS */
+@media (max-width: 768px) {
+  .section { padding: var(--space-xl) 0; }
+  .section-title { font-size: 2rem; }
+  .hero-title { font-size: 1.8rem; }
 
   .grid-3 { grid-template-columns: 1fr; }
   .grid-4 { grid-template-columns: repeat(2, 1fr); }
   .footer-content { grid-template-columns: repeat(2, 1fr); }
+  
+  .cta-buttons { flex-direction: column; width: 100%; padding: 0 var(--space-md); }
+  .cta-buttons a { width: 100%; text-align: center; }
 }
 
+/* SMALL MOBILE (PHONES) */
 @media (max-width: 480px) {
   .grid-4 { grid-template-columns: 1fr; }
   .footer-content { grid-template-columns: 1fr; }
-  .hero-cta { flex-direction: column; align-items: center; }
-  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .hero-cta { flex-direction: column; align-items: stretch; width: 100%; }
+  .hero-cta a { width: 100%; text-align: center; margin-bottom: 10px; }
+  .stats-grid { grid-template-columns: 1fr; }
 }
 @keyframes pulse {
   0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(67, 233, 123, 0.7); }
