@@ -4,5 +4,394 @@
    (Supplement to style.css for the login page)
    ================================================================ */
 
-/* Import fonts if not already loaded */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@700;800&display=swap');
+
+/* ============================================================
+   AUTH PAGE – Login / Register
+   ============================================================ */
+.auth-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-black) !important;
+  position: relative;
+  overflow: hidden;
+  padding: 40px 20px;
+}
+
+/* Animated gradient blobs behind the card */
+.auth-page::before,
+.auth-page::after {
+  content: '';
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.35;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.auth-page::before {
+  width: 500px;
+  height: 500px;
+  background: var(--color-primary);
+  top: -10%;
+  left: -10%;
+  animation: floatBlob 12s ease-in-out infinite alternate;
+}
+
+.auth-page::after {
+  width: 400px;
+  height: 400px;
+  background: var(--color-secondary);
+  bottom: -10%;
+  right: -10%;
+  animation: floatBlob 14s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes floatBlob {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(60px, -40px) scale(1.15); }
+}
+
+/* Back to Home link */
+.back-home {
+  position: fixed;
+  top: 28px;
+  left: 32px;
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-size: 0.9rem;
+  font-weight: 600;
+  z-index: 10;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.back-home:hover {
+  color: #fff !important;
+  transform: translateX(-4px);
+}
+
+/* Message box */
+#msgBox {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  padding: 14px 28px;
+  border-radius: 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+  animation: fadeInDown 0.4s ease;
+  max-width: 90%;
+}
+
+/* Auth card */
+.auth-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 460px;
+  background: rgba(15, 23, 42, 0.8) !important;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 24px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  animation: fadeInUp 0.6s ease;
+  color: white !important;
+}
+
+/* Tab bar */
+.tab-bar {
+  display: flex;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 18px 0;
+  background: none;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.4) !important;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  font-family: 'Inter', sans-serif;
+}
+
+.tab-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  width: 80%;
+  height: 3px;
+  border-radius: 3px 3px 0 0;
+  background: transparent;
+  transition: var(--transition);
+}
+
+.tab-btn.active {
+  color: #fff !important;
+}
+
+.tab-btn.active::after {
+  background: var(--gradient-neon) !important;
+}
+
+.tab-btn:hover:not(.active) {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* Tab panels */
+.tab-panel {
+  display: none;
+  padding: 36px 32px 32px;
+  animation: fadeInUp 0.4s ease;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+/* Form logo */
+.form-logo {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.form-logo img {
+  height: 42px;
+  width: auto;
+  filter: brightness(0) invert(1);
+}
+
+.form-subtitle {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.5) !important;
+  font-size: 0.88rem;
+  margin-bottom: 28px;
+  font-weight: 500;
+}
+
+/* ---- Input Groups ---- */
+.input-group {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 18px; /* Fixed alignment */
+  font-size: 1.1rem;
+  z-index: 2;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.input-group .error-msg {
+  display: none;
+  font-size: 0.78rem;
+  color: var(--color-error);
+  margin-top: 6px;
+  padding-left: 4px;
+  font-weight: 500;
+}
+
+.input-group input,
+.input-group select {
+  width: 100% !important;
+  padding: 14px 16px 14px 44px !important;
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 12px !important;
+  color: #fff !important;
+  font-size: 0.92rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  outline: none;
+  transition: var(--transition);
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.input-group select {
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23999' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 16px center !important;
+}
+
+.input-group select option {
+  background: #1a1a2e;
+  color: #fff;
+}
+
+.input-group input::placeholder {
+  color: rgba(255, 255, 255, 0.35) !important;
+}
+
+.input-group input:focus,
+.input-group select:focus {
+  border-color: var(--color-primary) !important;
+  background: rgba(99, 102, 241, 0.08) !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+}
+
+/* Password toggle button */
+.pwd-toggle {
+  position: absolute;
+  right: 12px;
+  top: 15px; /* Fixed alignment */
+  background: none !important;
+  border: none !important;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  z-index: 2;
+  opacity: 0.5;
+  transition: var(--transition);
+}
+
+.pwd-toggle:hover {
+  opacity: 1;
+}
+
+/* Password strength bar */
+.strength-bar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+
+.strength-fill {
+  height: 100%;
+  width: 0;
+  border-radius: 4px;
+  transition: width 0.4s ease, background 0.4s ease;
+}
+
+/* Forgot link */
+.forgot-link {
+  display: block;
+  text-align: right;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.45) !important;
+  margin-bottom: 8px;
+  transition: var(--transition);
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.forgot-link:hover {
+  color: var(--color-primary) !important;
+}
+
+/* Form row (side-by-side inputs) */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* Terms checkbox row */
+.terms-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 16px 0 4px;
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.terms-row input[type="checkbox"] {
+  margin-top: 3px;
+  accent-color: var(--color-primary);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.terms-row a {
+  color: var(--color-primary) !important;
+  text-decoration: underline;
+}
+
+/* Demo hint */
+.demo-hint {
+  margin-top: 24px;
+  padding: 14px 16px;
+  background: rgba(99, 102, 241, 0.08) !important;
+  border: 1px solid rgba(99, 102, 241, 0.15) !important;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.6) !important;
+  line-height: 1.8;
+}
+
+.demo-hint strong {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.demo-hint code {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.76rem;
+  color: var(--color-primary);
+}
+
+/* Switch text (bottom of panels) */
+.switch-text {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.45) !important;
+  font-weight: 500;
+}
+
+.switch-link {
+  background: none !important;
+  border: none !important;
+  color: var(--color-primary) !important;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: 'Inter', sans-serif;
+  padding: 0;
+}
+
+.switch-link:hover {
+  text-decoration: underline;
+}
+
+/* Auth page responsive */
+@media (max-width: 520px) {
+  .auth-card {
+    max-width: 100% !important;
+    border-radius: 18px !important;
+  }
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
