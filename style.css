@@ -165,20 +165,24 @@ h1, h2, h3, h4, h5 {
   width: 100%;
   z-index: 1000;
   padding: 0 var(--space-xl);
-  height: 80px;
+  height: 85px;
   display: flex;
   align-items: center;
-  transition: all 0.3s ease;
-  background: var(--sidebar-bg); /* Match Deep Navy Sidebar */
+  transition: var(--transition-slow);
+  background: rgba(11, 12, 16, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   color: #ffffff;
 }
 
 .navbar.scrolled,
 .navbar.solid {
-  background: #0f172a; /* Solid Deep Navy */
-  height: 80px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 4px 30px rgba(0,0,0,0.15);
+  background: rgba(15, 23, 42, 0.9);
+  height: 70px;
+  backdrop-filter: blur(25px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
 }
 
 .logo, 
@@ -219,9 +223,15 @@ h1, h2, h3, h4, h5 {
 }
 
 .logo img {
-  height: 45px;
+  height: 48px;
   width: auto;
   margin-right: 12px;
+  transition: var(--transition);
+}
+
+.logo:hover img {
+  transform: rotate(5deg) scale(1.1);
+  filter: drop-shadow(0 0 15px rgba(99, 102, 241, 0.6));
 }
 
 .navbar-menu {
@@ -232,33 +242,39 @@ h1, h2, h3, h4, h5 {
 
 .navbar-menu li a,
 .navbar-menu a {
-  color: rgba(255,255,255,0.85);
+  color: rgba(255,255,255,0.7);
   font-size: 0.95rem;
-  font-weight: 500;
+  font-weight: 600;
   position: relative;
   transition: var(--transition);
-  padding: 6px 0;
+  padding: 8px 0;
+  letter-spacing: 0.3px;
 }
 
-.navbar-menu li a::after {
+.navbar-menu li a::after,
+.navbar-menu a::after {
   content: '';
   position: absolute;
-  bottom: -2px;
+  bottom: 0;
   left: 0;
   width: 0;
   height: 2px;
-  background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
-  border-radius: var(--radius-full);
+  background: var(--gradient-neon);
+  border-radius: 4px;
   transition: var(--transition);
 }
 
 .navbar-menu li a:hover,
-.navbar-menu li a.active {
+.navbar-menu a:hover,
+.navbar-menu li a.active,
+.navbar-menu a.active {
   color: #fff;
 }
 
 .navbar-menu li a:hover::after,
-.navbar-menu li a.active::after {
+.navbar-menu a:hover::after,
+.navbar-menu li a.active::after,
+.navbar-menu a.active::after {
   width: 100%;
 }
 
@@ -435,14 +451,95 @@ h1, h2, h3, h4, h5 {
   border-radius: 50px;
 }
 
-.btn-white-outline {
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  color: white;
-  border: 2px solid white;
-  font-weight: 700;
-  padding: 14px 36px;
+.nav-register-btn {
+  background: var(--gradient-neon);
+  color: #fff !important;
+  padding: 10px 24px !important;
+  border-radius: 50px !important;
+  font-weight: 800 !important;
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+  transform: translateY(0);
+}
+
+.nav-register-btn::after { display: none !important; }
+
+.nav-register-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 8px 25px rgba(99, 102, 241, 0.6);
+  color: #fff !important;
+}
+
+/* Dashboard Top Bar (Specific to Student/Organizer panels) */
+.dashboard-top-bar {
+  position: sticky;
+  top: 0;
+  background: rgba(11, 12, 16, 0.3);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 20px 0;
+  margin-bottom: 40px;
+  z-index: 90;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dash-search {
+  flex: 0 0 350px;
+  position: relative;
+}
+
+.dash-search input {
+  width: 100%;
+  padding: 12px 20px 12px 45px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
   border-radius: 50px;
+  color: #fff;
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.dash-search input:focus {
+  background: rgba(255,255,255,0.06);
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+}
+
+.dash-search-icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255,255,255,0.4);
+}
+
+.dash-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.dash-action-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255,255,255,0.6);
+  font-size: 1.2rem;
+  transition: var(--transition);
+}
+
+.dash-action-btn:hover {
+  background: rgba(255,255,255,0.06);
+  color: #fff;
+  border-color: rgba(255,255,255,0.2);
+  transform: translateY(-2px);
 }
 
 /* ===== CARDS ===== */
