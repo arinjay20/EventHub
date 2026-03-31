@@ -4,64 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Register – EventHub</title>
-  <link rel="stylesheet" href="style.css">
-  <style>
-    body {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-      min-height:100vh; display:flex; align-items:center; justify-content:center;
-      font-family:'Inter',sans-serif; position:relative; overflow:hidden;
-    }
-    body::before {
-      content:''; position:fixed; inset:0;
-      background: radial-gradient(circle at 20% 30%, rgba(108,99,255,0.3) 0%, transparent 40%),
-                  radial-gradient(circle at 80% 70%, rgba(245,87,108,0.25) 0%, transparent 40%);
-    }
-    .back-home { position:fixed; top:20px; left:24px; color:rgba(255,255,255,0.7); font-size:0.9rem; display:flex; align-items:center; gap:6px; transition:color 0.3s; z-index:10; font-weight:500; }
-    .back-home:hover { color:white; }
-
-    .reg-card {
-      position:relative; z-index:1;
-      background:rgba(255,255,255,0.97); backdrop-filter:blur(10px);
-      border-radius:24px; padding:44px 40px; width:100%; max-width:480px;
-      box-shadow:0 25px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.08);
-      animation: fadeInUp 0.5s ease;
-    }
-    .form-logo { 
-      font-family:'Poppins',sans-serif; font-size:1.8rem; font-weight:800; 
-      display:flex; align-items:center; gap:10px; margin-bottom:6px; 
-    }
-    .form-logo span {
-      background:linear-gradient(135deg,#6c63ff,#f5576c); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-    }
-    .form-subtitle { color:#6b7280; font-size:0.9rem; margin-bottom:24px; }
-
-    .input-group { margin-bottom:14px; position:relative; }
-    .input-icon { position:absolute; left:14px; top:50%; transform:translateY(-50%); font-size:1rem; pointer-events:none; }
-    .input-group input, .input-group select {
-      width:100%; padding:12px 16px 12px 42px; border:2px solid #eef0f7; border-radius:12px;
-      font-size:0.9rem; color:#111827; background:#f8f9fc; outline:none; transition:all 0.3s;
-    }
-    .input-group input:focus, .input-group select:focus { border-color:#6c63ff; background:white; box-shadow:0 0 0 3px rgba(108,99,255,0.1); }
-
-    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
-    .form-label-sm { display:block; font-size:0.8rem; font-weight:600; color:#374151; margin-bottom:6px; }
-    .auth-btn { width:100%; padding:14px; background:linear-gradient(135deg,#6c63ff,#f5576c); color:white; border:none; border-radius:12px; font-size:1rem; font-weight:700; cursor:pointer; transition:all 0.3s; margin-top:6px; }
-    .auth-btn:hover { transform:translateY(-2px); box-shadow:0 8px 20px rgba(108,99,255,0.45); }
-    .switch-text { margin-top:16px; font-size:0.85rem; color:#6b7280; text-align:center; }
-    .switch-text a { color:#6c63ff; font-weight:700; }
-    .error-msg { color:#ef4444; font-size:0.78rem; margin-top:4px; display:none; }
-    .password-toggle { position:absolute; right:14px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; font-size:0.9rem; color:#6b7280; padding:0; }
-
-    .strength-bar { height:4px; background:#eef0f7; border-radius:4px; margin-top:6px; overflow:hidden; }
-    .strength-fill { height:100%; border-radius:4px; transition:width 0.3s, background 0.3s; width:0%; }
-
-    @keyframes fadeInUp { from { opacity:0; transform:translateY(30px); } to { opacity:1; transform:translateY(0); } }
-  </style>
+  <link rel="stylesheet" href="style.css?v=1.2">
 </head>
-<body>
+<body class="auth-page">
   <a href="index.html" class="back-home">← Back to Home</a>
 
-  <div class="reg-card">
+  <div class="auth-card">
+    <div style="padding: 40px;">
+
     <div class="form-logo">
       <img src="https://geu.ac.in/wp-content/uploads/2023/03/geu_white.svg" alt="GEU Logo" style="height: 40px; width: auto; filter: invert(1);"> 
       <span>EventHub</span>
@@ -120,11 +70,14 @@
         <label for="terms">I agree to the <a href="#" style="color:#6c63ff;font-weight:600;">Terms of Service</a> and <a href="#" style="color:#6c63ff;font-weight:600;">Privacy Policy</a></label>
       </div>
 
-      <button type="submit" class="auth-btn">✨ Create Free Account</button>
+      <button type="submit" class="btn btn-primary" style="width: 100%; padding: 14px; margin-top: 20px;">✨ Create Free Account</button>
+
     </form>
 
     <div class="switch-text">Already have an account? <a href="login.html">Login here</a></div>
+    </div>
   </div>
+
 
   <script>
     function togglePwd(id, btn) {
