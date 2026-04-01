@@ -142,10 +142,13 @@
       const card = document.createElement('div');
       card.className = 'event-card';
 
+      const poster = ev.poster && ev.poster !== 'assets/img/default-event.jpg' ? ev.poster : '';
+      const cardBg = poster ? `style="background-image: url('${poster}'); background-size: cover; background-position: center; border-radius: 12px 12px 0 0;"` : '';
+
       card.innerHTML = `
-        <div class="event-card-image ${catClass}">
+        <div class="event-card-image ${catClass}" ${cardBg}>
           <span class="event-category-badge">${ev.category}</span>
-          ${getCategoryEmoji(ev.category)}
+          ${poster ? '' : getCategoryEmoji(ev.category)}
         </div>
         <div class="event-card-body">
           <h3 class="event-title">${ev.name}</h3>

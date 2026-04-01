@@ -6,38 +6,33 @@
   <meta name="description" content="Organizer Dashboard – Manage and create events on EventHub, Graphic Era University.">
   <title>Organizer Dashboard – EventHub</title>
   <link rel="stylesheet" href="style.css?v=1.3">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.css">
+  <style>
+    #createEventPanel {
+      display: none;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    #createEventPanel.open {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
 </head>
-<body class="auth-page">
+<body style="background: var(--color-black); color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden;">
 
   <div class="toast-container" id="toastContainer"></div>
 
-  <!-- Navbar -->
-  <nav class="navbar solid" id="navbar">
-    <div class="nav-container">
-      <a href="index.html" class="navbar-brand">
-        <img src="https://geu.ac.in/wp-content/uploads/2023/03/geu_white.svg" alt="GEU Logo" style="height: 45px; width: auto; vertical-align: middle; margin-right: 12px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.15));">
-        EventHub
-      </a>
-      <ul class="navbar-menu" id="navbarMenu">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="events.html">Events</a></li>
-        <li><a href="organizer-dashboard.html" class="active">Dashboard</a></li>
-        <li><a href="#" id="logoutBtn" style="color:var(--color-error)">Logout</a></li>
-      </ul>
-      <div style="display:flex; align-items:center; gap:12px;">
-        <button class="notif-bell" title="Notifications">
-          🔔<span class="notif-count">3</span>
-        </button>
-        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </div>
-  </nav>
+
 
   <div class="Dashboard-layout">
-    <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside class="dashboard-sidebar">
+      <a href="index.html" class="sidebar-brand" style="display: flex; align-items: center; gap: 12px; margin-bottom: 40px; padding: 0 10px; text-decoration: none;">
+        <img src="https://geu.ac.in/wp-content/uploads/2023/03/geu_white.svg" alt="GEU Logo" style="height: 38px;">
+        <span style="font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.4rem; background: var(--gradient-neon); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;">EventHub</span>
+      </a>
       <nav class="sidebar-nav">
         <a href="#overview" class="sidebar-nav-item active" onclick="showSection('overview', this)">
           <span>🏠</span><span>Overview</span>
@@ -64,17 +59,33 @@
 
 
     <!-- Main Content -->
-    <main class="dashboard-main">
+    <main class="dashboard-main" style="flex: 1; width: 100%; padding: 0; overflow-y: auto; background: #0a0a0f !important; position: relative; margin: 0;">
+      <div style="position: absolute; top:0; left:0; right:0; bottom:0; background: radial-gradient(circle at 100% 0%, rgba(99, 102, 241, 0.1) 0%, transparent 40%); pointer-events:none;"></div>
+      <!-- Top Bar -->
+      <nav class="dashboard-top-bar" style="position: sticky; top: 0; background: rgba(11, 12, 16, 0.6); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 90; margin-bottom: 40px;">
+        <div class="dash-search" style="flex: 1; max-width: 600px; position: relative;">
+          <span class="dash-search-icon" style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4);">🔍</span>
+          <input type="text" placeholder="Search events, participants, or analytics..." style="width: 100%; padding: 12px 20px 12px 45px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 50px; color: #fff; font-size: 0.9rem; outline: none; transition: var(--transition);">
+        </div>
+        <div class="dash-nav" style="display: flex; gap: 32px; margin: 0 40px;">
+          <a href="index.html" style="color: rgba(255,255,255,0.6); font-weight: 500; font-size: 0.95rem; text-decoration:none; transition: var(--transition);" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Home</a>
+          <a href="events.html" style="color: rgba(255,255,255,0.6); font-weight: 500; font-size: 0.95rem; text-decoration:none; transition: var(--transition);" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Events</a>
+          <a href="organizer-dashboard.html" style="color: #fff; font-weight: 600; font-size: 0.95rem; text-decoration:none;">Dashboard</a>
+        </div>
+        <div class="dash-actions" style="display: flex; align-items: center; gap: 20px;">
+          <button class="dash-action-btn" title="Notifications" style="width: 44px; height: 44px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); display: flex; align-items: center; justify-content: center; transition: var(--transition); cursor:pointer;" onmouseover="this.style.borderColor='rgba(255,255,255,0.2)'; this.style.color='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'; this.style.color='rgba(255,255,255,0.6)'">🔔</button>
+          <button class="btn btn-primary" onclick="toggleCreateForm()" style="padding: 10px 24px; font-size: 0.85rem; border-radius: 12px;">➕ New Event</button>
+        </div>
+      </nav>
+
+      <div style="padding: 0 40px 40px; position:relative; z-index:1;"> <!-- Standardized 40px padding -->
 
       <!-- Header -->
-      <div class="dashboard-header">
+      <div class="dashboard-header" style="margin-bottom: 32px;">
         <div>
-          <h1>🎯 Organizer Dashboard</h1>
-          <p>Create and manage events for your campus community · <span style="color:var(--color-primary); font-weight:700;">March 15, 2026</span></p>
+          <h1 style="font-size: 2.2rem; font-weight: 800; color: #fff;">Organizer Dashboard</h1>
+          <p style="color: rgba(255,255,255,0.5); margin-top: 4px;">Monitor and manage campus events · <span style="color:var(--color-primary); font-weight:700;">March 15, 2026</span></p>
         </div>
-        <button class="btn btn-primary" id="createEventBtn" onclick="toggleCreateForm()" style="padding: 14px 28px;">
-          ➕ Create New Event
-        </button>
       </div>
 
 
@@ -110,20 +121,12 @@
         </div>
       </div>
 
-      <!-- Quick Actions -->
-      <div class="quick-actions-bar">
-        <button class="quick-btn" onclick="toggleCreateForm()">➕ New Event</button>
-        <button class="quick-btn" onclick="showToast('Exporting event report...', 'success')">📊 Export Report</button>
-        <button class="quick-btn" onclick="showToast('Email composer opened (Mock)', 'info')">📧 Email Participants</button>
-        <button class="quick-btn" onclick="showSection('participants')">📋 View All Registrations</button>
-      </div>
-
 
       <!-- Create Event Form (hidden by default) -->
-      <div class="dashboard-section" id="createEventPanel" style="display:none;">
+      <div class="dashboard-section" id="createEventPanel">
         <h2 style="margin-bottom:24px; font-size:1.4rem; font-weight:800; color:#fff;">➕ Create New Event</h2>
 
-        <form id="createEventForm" action="php/create_event.php" method="POST">
+        <form id="createEventForm" action="php/create_event.php" method="POST" enctype="multipart/form-data">
           <div class="form-grid" style="margin-bottom:16px;">
             <div class="form-field">
               <label class="dashboard-label" style="color:var(--color-gray-200); margin-bottom:8px; display:block;">Event Name *</label>
@@ -158,9 +161,25 @@
             </div>
 
           </div>
-          <div style="margin-bottom:16px;">
-            <label class="dashboard-label">Description *</label>
-            <textarea class="dashboard-input" name="description" rows="3" placeholder="Describe your event..." required style="resize:vertical; min-height:80px;"></textarea>
+
+          <!-- Poster Upload Section -->
+          <div style="margin-bottom:24px;">
+            <label class="dashboard-label" style="color:var(--color-gray-200); margin-bottom:12px; display:block;">Event Poster *</label>
+            <div id="posterPreviewArea" style="width:100%; aspect-ratio:1200/630; border:2px dashed rgba(255,255,255,0.15); border-radius:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:rgba(255,255,255,0.02); cursor:pointer; transition:var(--transition); overflow:hidden; position:relative;" onmouseover="this.style.borderColor='var(--color-primary)';this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.15)';this.style.background='rgba(255,255,255,0.02)'" onclick="document.getElementById('eventPosterInput').click()">
+              <div id="posterPlaceholder" style="text-align:center; padding:20px;">
+                <div style="font-size:2.8rem; margin-bottom:12px;">🖼️</div>
+                <p style="font-size:0.95rem; color:var(--color-gray-400); font-weight:500;">Click to upload event poster</p>
+                <p style="font-size:0.75rem; color:rgba(255,255,255,0.3); margin-top:6px;">Recommended: 1200x630 (PNG, JPG, WebP)</p>
+              </div>
+              <img id="posterPreviewImg" style="width:100%; height:100%; object-fit:contain; display:none; background: #000;">
+              <div id="removePosterBtn" style="position:absolute; top:12px; right:12px; background:rgba(239, 68, 68, 0.9); width:32px; height:32px; border-radius:50%; display:none; align-items:center; justify-content:center; color:white; font-size:1.1rem; cursor:pointer; z-index:10;" onclick="event.stopPropagation(); removePoster()">✕</div>
+            </div>
+            <input type="file" id="eventPosterInput" name="poster" accept="image/*" style="display:none;" onchange="previewPoster(this)">
+          </div>
+          <div style="margin-bottom:24px;">
+            <label class="dashboard-label" style="color:var(--color-gray-200); margin-bottom:8px; display:block;">Description *</label>
+            <textarea name="description" rows="4" placeholder="Provide a detailed description of your event, agenda, and rules..." required 
+              style="width:100%; padding:14px; background:rgba(255,255,255,0.05); color:#fff; border:1px solid var(--glass-border); border-radius:12px; outline:none; transition: var(--transition); font-family:inherit; resize:vertical; min-height:100px;"></textarea>
           </div>
           <div style="display:flex; gap:12px;">
             <button type="submit" class="btn btn-primary">🚀 Publish Event</button>
@@ -237,6 +256,7 @@
         </div>
       </div>
 
+      </div> <!-- End of content padding -->
     </main>
   </div>
 
@@ -253,6 +273,24 @@
     </div>
   </div>
 
+  <!-- Poster Cropper Modal -->
+  <div class="modal-overlay" id="posterCropperModal">
+    <div class="modal" style="max-width: 800px;">
+      <div class="modal-header">
+        <h2 style="font-weight:800; font-size:1.4rem;">Adjust Event Poster</h2>
+        <button class="modal-close" onclick="document.getElementById('posterCropperModal').classList.remove('active')">&times;</button>
+      </div>
+      <div style="max-height: 50vh; overflow:hidden; background:#000; border-radius:12px; margin-bottom:20px;">
+        <img id="posterCropperImg" src="" alt="Cropper Image" style="max-width: 100%;">
+      </div>
+      <div style="display:flex; gap:12px; justify-content:flex-end;">
+        <button class="btn btn-ghost" onclick="document.getElementById('posterCropperModal').classList.remove('active')">Cancel</button>
+        <button id="savePosterCropBtn" class="btn btn-primary">Save Crop</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.1/cropper.min.js"></script>
   <script src="js/main.js"></script>
   <script>
     let currentDeleteId = null;
@@ -405,10 +443,24 @@
     }
 
     // Create event form
-    document.getElementById('createEventForm').addEventListener('submit', function(e) {
+    document.getElementById('createEventForm').addEventListener('submit', async function(e) {
       e.preventDefault();
+      const submitBtn = this.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Publishing...';
+
       const fd = new FormData(this);
       
+      // If we have a cropped image in preview, use it!
+      const img = document.getElementById('posterPreviewImg');
+      if (img.style.display === 'block' && img.src.startsWith('data:')) {
+          try {
+              const resp = await fetch(img.src);
+              const blob = await resp.blob();
+              fd.set('poster', blob, originalFile ? originalFile.name : 'poster.webp');
+          } catch(err) { console.error('Blob conversion failed', err); }
+      }
+
       fetch('php/create_event.php', { method: 'POST', body: fd })
         .then(res => res.json())
         .then(data => {
@@ -416,12 +468,17 @@
                 showToast(data.message, 'success');
                 toggleCreateForm();
                 this.reset();
-                loadOrganizerDashboard(); // Instant update!
+                if (typeof removePoster === 'function') removePoster();
+                loadOrganizerDashboard();
             } else {
                 showToast(data.message, 'error');
             }
         })
-        .catch(err => showToast('Failed to create event.', 'error'));
+        .catch(err => showToast('Failed to create event.', 'error'))
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.textContent = '🚀 Publish Event';
+        });
     });
 
     // Initial load
@@ -429,6 +486,64 @@
 
     // Live Polling - every 10 seconds
     setInterval(loadOrganizerDashboard, 10000);
+
+    // Poster Preview Logic
+    let posterCropper = null;
+    let originalFile = null;
+
+    function previewPoster(input) {
+      if (input.files && input.files[0]) {
+        originalFile = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const modal = document.getElementById('posterCropperModal');
+          const image = document.getElementById('posterCropperImg');
+          image.src = e.target.result;
+          modal.classList.add('active');
+
+          if (posterCropper) posterCropper.destroy();
+          posterCropper = new Cropper(image, {
+            aspectRatio: 1200 / 630,
+            viewMode: 1,
+            autoCropArea: 0.9,
+            dragMode: 'move'
+          });
+        }
+        reader.readAsDataURL(originalFile);
+      }
+    }
+
+    function removePoster() {
+      const input = document.getElementById('eventPosterInput');
+      const area = document.getElementById('posterPreviewArea');
+      const placeholder = document.getElementById('posterPlaceholder');
+      const img = document.getElementById('posterPreviewImg');
+      const removeBtn = document.getElementById('removePosterBtn');
+
+      if (input) input.value = '';
+      if (img) { img.style.display = 'none'; img.src = ''; }
+      if (placeholder) placeholder.style.display = 'block';
+      if (removeBtn) removeBtn.style.display = 'none';
+      if (area) area.style.borderStyle = 'dashed';
+    }
+
+    // Modal save button
+    document.getElementById('savePosterCropBtn').onclick = function() {
+      if (!posterCropper) return;
+      const canvas = posterCropper.getCroppedCanvas({ width: 1200, height: 630 });
+      const img = document.getElementById('posterPreviewImg');
+      const placeholder = document.getElementById('posterPlaceholder');
+      const removeBtn = document.getElementById('removePosterBtn');
+      const area = document.getElementById('posterPreviewArea');
+
+      img.src = canvas.toDataURL('image/webp', 0.9);
+      img.style.display = 'block';
+      placeholder.style.display = 'none';
+      removeBtn.style.display = 'flex';
+      area.style.borderStyle = 'solid';
+
+      document.getElementById('posterCropperModal').classList.remove('active');
+    };
   </script>
 </body>
 </html>

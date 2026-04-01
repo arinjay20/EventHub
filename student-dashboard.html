@@ -23,8 +23,18 @@
     .Dashboard-layout {
       display: flex;
       min-height: 100vh;
-      background: radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 35%),
-                  radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.15) 0%, transparent 35%);
+      margin-top: 0;
+      background: #0a0a0f !important; /* Deep dark base */
+      position: relative;
+      overflow: hidden;
+    }
+    .Dashboard-layout::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 0% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 40%),
+                  radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.15) 0%, transparent 40%);
+      pointer-events: none;
     }
 
     /* ── Sidebar Redesign ── */
@@ -59,6 +69,7 @@
       font-size: 1.4rem; 
       background: var(--gradient-neon);
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
@@ -130,9 +141,11 @@
     /* ── Main Content ── */
     .dashboard-content {
       flex: 1;
-      padding: 40px 60px;
-      max-width: 1400px;
-      margin: 0 auto;
+      padding: 0;
+      overflow-y: auto;
+      width: 100%;
+      position: relative;
+      z-index: 1;
     }
 
     .dashboard-header h1 { 
@@ -381,17 +394,22 @@
     <!-- Main Content -->
     <main class="dashboard-content">
       <!-- Top Bar -->
-      <nav class="dashboard-top-bar">
-        <div class="dash-search">
-          <span class="dash-search-icon">🔍</span>
-          <input type="text" placeholder="Search events, registrations, or achievements...">
+      <nav class="dashboard-top-bar" style="position: sticky; top: 0; background: rgba(11, 12, 16, 0.6); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; z-index: 90; margin-bottom: 40px;">
+        <div class="dash-search" style="flex: 1; max-width: 600px; position: relative;">
+          <span class="dash-search-icon" style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.4);">🔍</span>
+          <input type="text" placeholder="Search events, registrations, or achievements..." style="width: 100%; padding: 12px 20px 12px 45px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 50px; color: #fff; font-size: 0.9rem; outline: none; transition: var(--transition);">
         </div>
-        <div class="dash-actions">
-          <button class="dash-action-btn" title="Notifications">🔔</button>
-          <button class="dash-action-btn" title="Settings">⚙️</button>
-          <a href="events.html" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.85rem; border-radius: 12px; margin-left:10px;">🔍 Explore Events</a>
+        <div class="dash-nav" style="display: flex; gap: 32px; margin: 0 40px;">
+          <a href="index.html" style="color: rgba(255,255,255,0.6); font-weight: 500; font-size: 0.95rem; text-decoration:none; transition: var(--transition);" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Home</a>
+          <a href="events.html" style="color: rgba(255,255,255,0.6); font-weight: 500; font-size: 0.95rem; text-decoration:none; transition: var(--transition);" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,0.6)'">Events</a>
+          <a href="student-dashboard.html" style="color: #fff; font-weight: 600; font-size: 0.95rem; text-decoration:none;">Dashboard</a>
+        </div>
+        <div class="dash-actions" style="display: flex; align-items: center; gap: 20px;">
+          <button class="dash-action-btn" title="Notifications" style="width: 44px; height: 44px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); display: flex; align-items: center; justify-content: center; transition: var(--transition); cursor:pointer;" onmouseover="this.style.borderColor='rgba(255,255,255,0.2)'; this.style.color='#fff'" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'; this.style.color='rgba(255,255,255,0.6)'">🔔</button>
         </div>
       </nav>
+
+      <div style="padding: 0 40px 40px;"> <!-- Standardized 40px padding -->
 
       <header class="dashboard-header" style="margin-bottom: 40px;">
         <h1 id="welcomeMsg" style="font-size: 2.2rem;">Welcome back!</h1>
@@ -451,6 +469,7 @@
         <div id="trendingList" style="display: grid; grid-template-columns: 1fr; gap: 14px;">
           <!-- Loaded by JS -->
         </div>
+        </div> <!-- End of content padding -->
       </section>
     </main>
   </div>
@@ -498,10 +517,14 @@
       const isNew    = prevRegCount !== null && newCount > prevRegCount;
       prevRegCount   = newCount;
 
-      grid.innerHTML = events.map((ev, idx) => `
+      grid.innerHTML = events.map((ev, idx) => {
+        const hasPoster = ev.poster && ev.poster !== 'assets/img/default-event.jpg';
+        const thumbStyle = hasPoster ? `background-image: url('${ev.poster}'); background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.1);` : `background:${ev.color};`;
+
+        return `
         <div class="registered-card ${isNew && idx === 0 ? 'new-event' : ''}">
           <div style="display:flex;align-items:center;gap:12px;">
-            <div class="event-icon-box" style="background:${ev.color};">${ev.icon}</div>
+            <div class="event-icon-box" style="${thumbStyle}">${hasPoster ? '' : ev.icon}</div>
             <div>
               <strong>${ev.name}</strong>
               <span class="badge ${ev.status === 'full' ? 'badge-warning' : 'badge-success'}" style="display:block;margin-top:4px;">
@@ -518,7 +541,7 @@
             ? `<span class="badge" style="background: rgba(99, 102, 241, 0.1); color: #818cf8; text-align:center; font-weight:700; display:block; padding:8px; border-radius:10px; border: 1px solid rgba(99, 102, 241, 0.2);">✅ Registered</span>`
             : `<span class="badge" style="background: rgba(16, 185, 129, 0.1); color: #10b981; text-align:center; display:block; padding:8px; border-radius:10px; border: 1px solid rgba(16, 185, 129, 0.2);">✅ Attended</span>`
           }
-        </div>`).join('');
+        </div>`}).join('');
     }
 
     /* Render Trending Events */
@@ -528,17 +551,21 @@
         list.innerHTML = '<p style="color:#9ca3af;text-align:center;font-size:0.9rem;">No trending events right now.</p>';
         return;
       }
-      list.innerHTML = events.map(ev => `
+      list.innerHTML = events.map(ev => {
+        const hasPoster = ev.poster && ev.poster !== 'assets/img/default-event.jpg';
+        const thumbStyle = hasPoster ? `background-image: url('${ev.poster}'); background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.1);` : `background:${ev.color};`;
+
+        return `
         <div style="display:flex;align-items:center;gap:14px;padding:16px;background:rgba(255,255,255,0.02);border-radius:18px;justify-content:space-between;border:1px solid rgba(255,255,255,0.05);transition:var(--transition);" onmouseover="this.style.borderColor='var(--color-primary)'; this.style.background='rgba(255,255,255,0.05)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.05)'; this.style.background='rgba(255,255,255,0.02)'">
           <div style="display:flex;align-items:center;gap:14px;">
-            <div style="width:42px;height:42px;border-radius:10px;background:${ev.color};display:flex;align-items:center;justify-content:center;font-size:1.3rem;">${ev.icon}</div>
+            <div style="width:42px;height:42px;border-radius:10px;${thumbStyle}display:flex;align-items:center;justify-content:center;font-size:1.3rem;">${hasPoster ? '' : ev.icon}</div>
             <div>
               <strong style="font-size:0.9rem;">${ev.name}</strong><br>
               <span style="font-size:0.75rem;color:rgba(255,255,255,0.5);">📅 ${new Date(ev.event_date).toLocaleDateString('en-IN',{day:'numeric',month:'short'})} &nbsp;·&nbsp; ${ev.seats_left} seats left</span>
             </div>
           </div>
           <a href="events.html" class="btn btn-primary btn-sm" style="padding: 8px 16px; font-size: 0.8rem;">Register</a>
-        </div>`).join('');
+        </div>`}).join('');
     }
 
     /* ── Main loader ── */

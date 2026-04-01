@@ -36,6 +36,25 @@ if (empty($name) || empty($category) || empty($event_date) || empty($event_time)
 // Combine date and time
 $full_event_date = $event_date . ' ' . $event_time;
 
+// 2. Handle Poster Upload
+$poster_path = 'assets/img/default-event.jpg'; // Fallback
+if (isset($_FILES['poster']) && $_FILES['poster']['error'] === UPLOAD_ERR_OK) {
+    $upload_dir = '../uploads/posters/';
+    if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
+    
+    $file_ext = strtolower(pathinfo($_FILES['poster']['name'], PATHINFO_EXTENSION));
+    $allowed_exts = ['jpg', 'jpeg', 'png', 'webp'];
+    
+    if (in_array($file_ext, $allowed_exts)) {
+        $new_filename = 'poster_' . time() . '_' . uniqid() . '.' . $file_ext;
+        $target_file = $upload_dir . $new_filename;
+        
+        if (move_uploaded_file($_FILES['poster']['tmp_name'], $target_file)) {
+            $poster_path = 'uploads/posters/' . $new_filename;
+        }
+    }
+}
+
 try {
     $pdo = getDB();
     
@@ -47,18 +66,22 @@ try {
         exit;
     }
 
-    // 2. Insert Event
-    $stmt = $pdo->prepare("INSERT INTO events (name, organizer_id, category, event_date, venue, max_capacity, description, status) 
-                          VALUES (?, ?, ?, ?, ?, ?, ?, 'active')");
-    $stmt->execute([$name, $organizer_id, $category, $full_event_date, $venue, $capacity, $description]);
+    // 3. Insert Event (Added poster column)
+    $stmt = $pdo->prepare("INSERT INTO events (name, organizer_id, category, event_date, venue, max_capacity, description, poster, status) 
+                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'active')");
+    $stmt->execute([$name, $organizer_id, $category, $full_event_date, $venue, $capacity, $description, $poster_path]);
 
     echo json_encode([
         'success' => true, 
-        'message' => '🎉 Event created successfully!',
+        'message' => '🎉 Event published successfully!',
         'event_id' => $pdo->lastInsertId()
     ]);
 
 } catch (PDOException $e) {
-    echo json_encode(['success' => false, 'message' => 'Database error: ' . $e->getMessage()]);
+    if ($e->getCode() == '42S22' || strpos($e->getMessage(), 'poster') !== false) {
+        echo json_encode(['success' => false, 'message' => '🛠️ Database needs a quick update. Please visit localhost:8000/migrate_db.php in your browser!']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Backend Error: ' . $e->getMessage()]);
+    }
 }
 ?>

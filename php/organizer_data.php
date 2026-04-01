@@ -30,7 +30,7 @@ try {
     $stats = $stmt->fetch(PDO::FETCH_ASSOC);
 
     // 2. Get Events List
-    $stmt = $pdo->prepare("SELECT id, name, category, event_date, venue, registered_count, max_capacity, status 
+    $stmt = $pdo->prepare("SELECT id, name, category, event_date, venue, registered_count, max_capacity, status, poster 
                           FROM events 
                           WHERE organizer_id = ? 
                           ORDER BY event_date DESC");

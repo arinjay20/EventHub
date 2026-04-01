@@ -42,7 +42,7 @@ try {
     
     // Using JOIN to get organizer name
     $sql = "SELECT e.id, e.name, e.category, e.event_date, e.venue, e.description,
-                   e.max_capacity, e.registered_count, e.status,
+                   e.max_capacity, e.registered_count, e.status, e.poster,
                    CONCAT(u.first_name, ' ', u.last_name) as organizer_name
             FROM events e
             LEFT JOIN users u ON e.organizer_id = u.id

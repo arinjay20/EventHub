@@ -50,7 +50,7 @@ try {
     $stmt = $pdo->prepare("
         SELECT
             e.id, e.name, e.event_date, e.venue AS location, e.status,
-            e.category, e.registered_count, e.max_capacity,
+            e.category, e.registered_count, e.max_capacity, e.poster,
             r.registration_date AS registered_at,
             DATEDIFF(e.event_date, NOW()) AS days_left
         FROM registrations r
@@ -90,7 +90,7 @@ try {
     /* ---- Trending events (not yet registered) ---- */
     $stmt = $pdo->prepare("
         SELECT e.id, e.name, e.event_date, e.venue AS location, e.category,
-               e.registered_count, e.max_capacity,
+               e.registered_count, e.max_capacity, e.poster,
                DATEDIFF(e.event_date, NOW()) AS days_left
         FROM events e
         WHERE e.status = 'active'
