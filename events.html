@@ -147,6 +147,17 @@
 
   <script src="js/main.js"></script>
   <script src="js/events.js"></script>
+  <script>
+    // Compact Sticky Filter Effect
+    window.addEventListener('scroll', () => {
+      const filtersBar = document.querySelector('.filters-bar');
+      if (window.scrollY > 200) {
+        filtersBar.classList.add('stuck');
+      } else {
+        filtersBar.classList.remove('stuck');
+      }
+    });
+  </script>
 
   <!-- Registration Modal -->
   <div class="modal-overlay" id="regModal">

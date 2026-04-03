@@ -127,6 +127,7 @@
         <h2 style="margin-bottom:24px; font-size:1.4rem; font-weight:800; color:#fff;">➕ Create New Event</h2>
 
         <form id="createEventForm" action="php/create_event.php" method="POST" enctype="multipart/form-data">
+          <input type="hidden" name="event_id" id="editEventId">
           <div class="form-grid" style="margin-bottom:16px;">
             <div class="form-field">
               <label class="dashboard-label" style="color:var(--color-gray-200); margin-bottom:8px; display:block;">Event Name *</label>
@@ -400,7 +401,9 @@
                         <tr>
                             <td>
                                 <div style="display:flex; align-items:center; gap:12px;">
-                                    <div style="width:40px; height:40px; border-radius:10px; background:linear-gradient(135deg,#6c63ff,#f5576c); display:flex; align-items:center; justify-content:center; font-size:1.1rem; color:white;">⚡</div>
+                                    <div style="width:40px; height:40px; border-radius:10px; background:${ev.poster ? `url('${ev.poster}') center/cover` : 'linear-gradient(135deg,#6c63ff,#f5576c)'}; display:flex; align-items:center; justify-content:center; font-size:1.1rem; color:white; border:1px solid rgba(255,255,255,0.05);">
+                                        ${ev.poster ? '' : '⚡'}
+                                    </div>
                                     <div><strong>${ev.name}</strong><br><span style="font-size:0.78rem;color:#6b7280;">${ev.category}</span></div>
                                 </div>
                             </td>
@@ -413,7 +416,8 @@
                             <td><span class="badge ${statusClass}"><span class="status-dot ${statusDot}"></span>${statusText}</span></td>
                             <td>
                                 <div style="display:flex; gap:6px;">
-                                    <button class="btn btn-outline btn-sm">Edit</button>
+                                    <button class="btn btn-outline btn-sm" onclick="viewParticipants(${ev.id}, '${ev.name.replace(/'/g, "\\'")}')">View</button>
+                                    <button class="btn btn-ghost btn-sm" onclick="editEvent(${ev.id})">Edit</button>
                                     <button class="btn btn-ghost btn-sm" style="color:#ef4444;" onclick="confirmDelete(${ev.id}, '${ev.name.replace(/'/g, "\\'")}')">Delete</button>
                                 </div>
                             </td>
@@ -446,8 +450,9 @@
     document.getElementById('createEventForm').addEventListener('submit', async function(e) {
       e.preventDefault();
       const submitBtn = this.querySelector('button[type="submit"]');
+      const isEdit = this.event_id && this.event_id.value;
       submitBtn.disabled = true;
-      submitBtn.textContent = 'Publishing...';
+      submitBtn.textContent = isEdit ? 'Updating...' : 'Publishing...';
 
       const fd = new FormData(this);
       
@@ -466,18 +471,26 @@
         .then(data => {
             if (data.success) {
                 showToast(data.message, 'success');
-                toggleCreateForm();
-                this.reset();
-                if (typeof removePoster === 'function') removePoster();
+                if (isEdit) {
+                    cancelEdit();
+                } else {
+                    this.reset();
+                    if (typeof removePoster === 'function') removePoster();
+                }
+                
+                // Close the form panel after successful submission
+                const panel = document.getElementById('createEventPanel');
+                if (panel) panel.classList.remove('open');
+                
                 loadOrganizerDashboard();
             } else {
                 showToast(data.message, 'error');
             }
         })
-        .catch(err => showToast('Failed to create event.', 'error'))
+        .catch(err => showToast('Failed to save event.', 'error'))
         .finally(() => {
             submitBtn.disabled = false;
-            submitBtn.textContent = '🚀 Publish Event';
+            submitBtn.textContent = isEdit ? '💾 Save Changes' : '🚀 Publish Event';
         });
     });
 
@@ -544,6 +557,185 @@
 
       document.getElementById('posterCropperModal').classList.remove('active');
     };
+  </script>
+
+  <!-- Modal: View Participants -->
+  <div id="participantsModal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 900px; max-height: 85vh; padding: 0; display: flex; flex-direction: column;">
+      <div style="padding: 24px 32px; border-bottom: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02);">
+        <div>
+          <h2 id="modalTargetEvent" style="font-size: 1.4rem; font-weight: 800; color: #fff;">Event Participants</h2>
+          <p id="participantCount" style="font-size: 0.82rem; color: rgba(255,255,255,0.5); margin-top: 4px;">Loading roster...</p>
+        </div>
+        <button class="btn btn-ghost" style="width: 44px; height: 44px; border-radius: 50%; font-size: 1.4rem;" onclick="document.getElementById('participantsModal').classList.remove('active')">✕</button>
+      </div>
+      
+      <div style="flex: 1; overflow-y: auto; padding: 0 32px 32px;">
+        <div class="data-table-container" style="border: none; background: transparent; padding: 0; box-shadow: none; margin: 20px 0;">
+          <table class="data-table">
+            <thead>
+              <tr style="border-bottom: 2px solid rgba(255,255,255,0.1);">
+                <th style="padding: 16px 12px; font-weight: 700; color: #94a3b8;">Student Name</th>
+                <th style="padding: 16px 12px; font-weight: 700; color: #94a3b8;">Student ID</th>
+                <th style="padding: 16px 12px; font-weight: 700; color: #94a3b8;">Course/Branch</th>
+                <th style="padding: 16px 12px; font-weight: 700; color: #94a3b8;">Phone Number</th>
+                <th style="padding: 16px 12px; font-weight: 700; color: #94a3b8;">Registered On</th>
+              </tr>
+            </thead>
+            <tbody id="participantListTable">
+              <!-- Participants will be injected here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function editEvent(eventId) {
+      const panel = document.getElementById('createEventPanel');
+      const title = panel.querySelector('h2');
+      const form = document.getElementById('createEventForm');
+      const submitBtn = form.querySelector('button[type="submit"]');
+
+      // Scroll to top to see edit form
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      title.innerHTML = "✏️ Edit Event Details";
+      submitBtn.innerHTML = "💾 Save Changes";
+      
+      // Ensure panel is visible and active
+      panel.classList.add('open');
+
+      try {
+        const response = await fetch(`php/get_event_details.php?id=${eventId}`);
+        const data = await response.json();
+
+        if (data.success) {
+          const ev = data.event;
+          
+          // Defensively split date/time
+          let parts = ev.event_date.split(' ');
+          let date = parts[0] || '';
+          let time = parts[1] || '08:00:00'; // Default time if missing
+
+          form.event_id.value = ev.id;
+          form.event_name.value = ev.name;
+          form.category.value = ev.category;
+          form.event_date.value = date;
+          form.event_time.value = (time && time.length >= 5) ? time.substring(0, 5) : "08:00"; 
+          form.venue.value = ev.venue;
+          form.capacity.value = ev.max_capacity;
+          form.description.value = ev.description;
+
+          // If there's an existing poster, show it in the preview
+          if (ev.poster && ev.poster.trim() !== "" && ev.poster !== "assets/img/default-event.jpg") {
+            const preview = document.getElementById('posterPreviewImg');
+            const placeholder = document.getElementById('posterPlaceholder');
+            const removeBtn = document.getElementById('removePosterBtn');
+            
+            if(preview) {
+              preview.src = ev.poster;
+              preview.style.display = 'block';
+            }
+            if(placeholder) placeholder.style.display = 'none';
+            if(removeBtn) removeBtn.style.display = 'flex';
+          }
+
+          // Add a Cancel button if it doesn't exist
+          if (!document.getElementById('cancelEditBtn')) {
+            const cancelBtn = document.createElement('button');
+            cancelBtn.id = 'cancelEditBtn';
+            cancelBtn.type = 'button';
+            cancelBtn.className = 'btn btn-outline';
+            cancelBtn.style.flex = '1';
+            cancelBtn.innerText = 'Cancel Edit';
+            cancelBtn.onclick = cancelEdit;
+            submitBtn.parentElement.appendChild(cancelBtn);
+          }
+        } else {
+          showToast(data.message, 'error');
+        }
+      } catch (err) {
+        showToast('System Error fetching event details.', 'error');
+        console.error(err);
+      }
+    }
+
+    function cancelEdit() {
+      const panel = document.getElementById('createEventPanel');
+      const title = panel.querySelector('h2');
+      const form = document.getElementById('createEventForm');
+      const submitBtn = form.querySelector('button[type="submit"]');
+
+      form.reset();
+      form.event_id.value = "";
+      panel.classList.remove('open');
+      title.innerHTML = "➕ Create New Event";
+      submitBtn.innerHTML = "🚀 Publish Event";
+      
+      const cancelBtn = document.getElementById('cancelEditBtn');
+      if (cancelBtn) cancelBtn.remove();
+
+      // Reset poster preview
+      const preview = document.getElementById('posterPreviewImg');
+      const placeholder = document.getElementById('posterPlaceholder');
+      const removeBtn = document.getElementById('removePosterBtn');
+      
+      if(preview) {
+        preview.src = "";
+        preview.style.display = 'none';
+      }
+      if(placeholder) placeholder.style.display = 'block';
+      if(removeBtn) removeBtn.style.display = 'none';
+      
+      // Clear cropper if active
+      if (typeof cropper !== 'undefined' && cropper) {
+          cropper.destroy();
+          cropper = null;
+      }
+    }
+
+    async function viewParticipants(eventId, eventName) {
+      const modal = document.getElementById('participantsModal');
+      const table = document.getElementById('participantListTable');
+      const countText = document.getElementById('participantCount');
+      const targetName = document.getElementById('modalTargetEvent');
+
+      targetName.innerText = eventName;
+      countText.innerText = "Fetching participants...";
+      table.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:60px; color:rgba(255,255,255,0.4);">🔍 Scanning registration database...</td></tr>`;
+      modal.classList.add('active');
+
+      try {
+        const response = await fetch(`php/get_event_participants.php?event_id=${eventId}`);
+        const data = await response.json();
+
+        if (data.success) {
+          countText.innerText = `${data.participants.length} verified participant(s)`;
+          
+          if (data.participants.length === 0) {
+            table.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:60px; color:rgba(255,255,255,0.4);">❌ No registrations found for this event yet.</td></tr>`;
+            return;
+          }
+
+          table.innerHTML = data.participants.map(p => `
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+              <td style="padding: 16px 12px;"><strong>${p.full_name}</strong></td>
+              <td style="padding: 16px 12px;"><code style="background:rgba(108,99,255,0.1); padding:2px 6px; border-radius:4px; font-size:0.85rem;">${p.student_id}</code></td>
+              <td style="padding: 16px 12px;"><span style="font-size:0.9rem;">${p.course}</span><br><span style="font-size:0.78rem;color:#6b7280;">${p.branch || 'General'}</span></td>
+              <td style="padding: 16px 12px; font-weight: 600;">${p.phone}</td>
+              <td style="padding: 16px 12px; color: #94a3b8; font-size: 0.85rem;">${new Date(p.registration_date).toLocaleDateString('en-IN', {day:'numeric', month:'short', year:'numeric'})}</td>
+            </tr>
+          `).join('');
+        } else {
+          showToast(data.message, 'error');
+          modal.classList.remove('active');
+        }
+      } catch (err) {
+        showToast('System Error fetching roster.', 'error');
+        console.error(err);
+      }
+    }
   </script>
 </body>
 </html>
