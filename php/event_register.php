@@ -50,20 +50,43 @@ try {
 
     // 3. Extract and validate additional details
     $full_name  = trim($_POST['full_name']  ?? '');
+    $email      = trim($_POST['email']      ?? '');
     $course     = trim($_POST['course']     ?? '');
     $branch     = trim($_POST['branch']     ?? '');
     $phone      = trim($_POST['phone']      ?? '');
     $student_id = trim($_POST['student_id'] ?? '');
+    
+    $group_name = trim($_POST['group_name'] ?? '');
+    $team_members_raw = $_POST['team_members'] ?? '[]';
+    $team_members = json_decode($team_members_raw, true);
 
-    if (empty($full_name) || empty($course) || empty($branch) || empty($phone) || empty($student_id)) {
-        die(json_encode(['success' => false, 'message' => 'Please fill in all student details.']));
+    if (empty($full_name) || empty($email) || empty($course) || empty($branch) || empty($phone) || empty($student_id)) {
+        die(json_encode(['success' => false, 'message' => 'Please fill in all primary student details.']));
     }
 
-    // 4. Perform registration
     $pdo->beginTransaction();
     
-    $stmt = $pdo->prepare("INSERT INTO registrations (user_id, event_id, full_name, course, branch, phone, student_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt->execute([$user_id, $event_id, $full_name, $course, $branch, $phone, $student_id]);
+    // Insert primary registration record
+    $stmt = $pdo->prepare("INSERT INTO registrations (user_id, event_id, full_name, email, course, branch, phone, student_id, group_name) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->execute([$user_id, $event_id, $full_name, $email, $course, $branch, $phone, $student_id, empty($group_name) ? null : $group_name]);
+    $registration_id = $pdo->lastInsertId();
+
+    // Insert team members if any
+    if (is_array($team_members) && !empty($team_members)) {
+        $stmtMember = $pdo->prepare("INSERT INTO team_members (registration_id, full_name, email, phone, student_id) VALUES (?, ?, ?, ?, ?)");
+        foreach ($team_members as $m) {
+            $m_name = trim($m['full_name'] ?? '');
+            $m_email = trim($m['email'] ?? '');
+            $m_phone = trim($m['phone'] ?? '');
+            $m_studentid = trim($m['student_id'] ?? '');
+            if (!empty($m_name) && !empty($m_email) && !empty($m_phone) && !empty($m_studentid)) {
+                $stmtMember->execute([$registration_id, $m_name, $m_email, $m_phone, $m_studentid]);
+            }
+        }
+    }
+    
+    // Update registered count in events table
+    $pdo->exec("UPDATE events SET registered_count = registered_count + 1 WHERE id = " . (int)$event_id);
     
     $pdo->commit();
 

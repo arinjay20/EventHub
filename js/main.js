@@ -314,6 +314,65 @@ window.openRegisterModal = function (eventId, eventName) {
     });
 };
 
+// Toggle Registration Mode (Solo/Group)
+window.toggleRegType = function(type) {
+  const groupContainer = document.getElementById('regGroupContainer');
+  const teamMembersContainer = document.getElementById('teamMembersContainer');
+  const primaryLabel = document.getElementById('regPrimaryLabel');
+  
+  if (type === 'group') {
+    if(groupContainer) groupContainer.style.display = 'block';
+    if(teamMembersContainer) teamMembersContainer.style.display = 'flex';
+    if(primaryLabel) primaryLabel.textContent = 'Team Leader Details';
+    const groupNameInput = document.getElementById('regGroupName');
+    if(groupNameInput) groupNameInput.required = true;
+    
+    // Add first team member template if none exists
+    const list = document.getElementById('teamMembersList');
+    if (list && list.children.length === 0) {
+      window.addTeamMember();
+    }
+  } else {
+    if(groupContainer) groupContainer.style.display = 'none';
+    if(teamMembersContainer) teamMembersContainer.style.display = 'none';
+    if(primaryLabel) primaryLabel.textContent = 'Participant Details';
+    const groupNameInput = document.getElementById('regGroupName');
+    if(groupNameInput) groupNameInput.required = false;
+  }
+};
+
+window.addTeamMember = function() {
+  const list = document.getElementById('teamMembersList');
+  if(!list) return;
+  const div = document.createElement('div');
+  div.className = 'team-member-entry';
+  
+  div.innerHTML = `
+    <button type="button" class="remove-btn" onclick="this.parentElement.remove()" title="Remove member">✕</button>
+    <div style="display:grid;gap:10px;margin-right:36px;">
+      <div>
+        <label class="reg-label">Full Name</label>
+        <input type="text" class="tm-name reg-input" required placeholder="Member's full name">
+      </div>
+      <div>
+        <label class="reg-label">Email</label>
+        <input type="email" class="tm-email reg-input" required placeholder="Member's email">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <div>
+          <label class="reg-label">Phone</label>
+          <input type="tel" class="tm-phone reg-input" required placeholder="Phone no.">
+        </div>
+        <div>
+          <label class="reg-label">Student ID</label>
+          <input type="text" class="tm-studentid reg-input" required placeholder="Roll No">
+        </div>
+      </div>
+    </div>
+  `;
+  list.appendChild(div);
+};
+
 // Handle Registration Form Submission
 document.addEventListener('submit', async (e) => {
   if (e.target && e.target.id === 'regForm') {
@@ -332,10 +391,29 @@ document.addEventListener('submit', async (e) => {
       const fd = new FormData();
       fd.append('event_id', eventId);
       fd.append('full_name', document.getElementById('regFullName').value);
+      fd.append('email', document.getElementById('regEmail')?.value || '');
       fd.append('course', document.getElementById('regCourse').value);
       fd.append('branch', document.getElementById('regBranch').value);
       fd.append('phone', document.getElementById('regPhone').value);
       fd.append('student_id', document.getElementById('regStudentId').value);
+
+      // Group Details Logic
+      const regTypeObj = form.querySelector('input[name="regType"]:checked');
+      if (regTypeObj && regTypeObj.value === 'group') {
+        const groupNameEl = document.getElementById('regGroupName');
+        if(groupNameEl) fd.append('group_name', groupNameEl.value);
+        
+        const teamMembers = [];
+        form.querySelectorAll('.team-member-entry').forEach(entry => {
+          teamMembers.push({
+            full_name: entry.querySelector('.tm-name').value,
+            email: entry.querySelector('.tm-email').value,
+            phone: entry.querySelector('.tm-phone').value,
+            student_id: entry.querySelector('.tm-studentid').value
+          });
+        });
+        fd.append('team_members', JSON.stringify(teamMembers));
+      }
 
       const res = await fetch('php/event_register.php', { method: 'POST', body: fd });
       const data = await res.json();

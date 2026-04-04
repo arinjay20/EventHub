@@ -135,24 +135,42 @@
     if (eventCount) eventCount.textContent = events.length;
 
     events.forEach(ev => {
-      const isPast = new Date(ev.event_date) < new Date();
-      const pct = Math.min(100, Math.round((ev.registered_count / ev.max_capacity) * 100));
-      const catClass = `cat-bg-${ev.category.toLowerCase()}`;
+      const isPast   = new Date(ev.event_date) < new Date();
+      const pct      = Math.min(100, Math.round((ev.registered_count / ev.max_capacity) * 100));
+      const catSlug  = ev.category.toLowerCase();
+      const catClass = `cat-bg-${catSlug}`;
+      const spotsLeft = ev.max_capacity - ev.registered_count;
+
+      // Poster support
+      const hasPoster = ev.poster && ev.poster !== 'assets/img/default-event.jpg';
+      let posterUrl = ev.poster;
+      if (hasPoster && posterUrl.startsWith('uploads/') && !posterUrl.startsWith('uploads/posters/')) {
+        posterUrl = posterUrl.replace('uploads/', 'uploads/posters/');
+      }
+      const imageStyle = hasPoster
+        ? `style="background-image:url('${posterUrl}'); background-size:cover; background-position:center;"`
+        : '';
+
+      // Status label
+      let btnLabel, btnDisabled;
+      if (isPast)                                   { btnLabel = '✓ Completed';  btnDisabled = 'disabled'; }
+      else if (ev.registered_count >= ev.max_capacity) { btnLabel = '🔒 Event Full'; btnDisabled = 'disabled'; }
+      else                                          { btnLabel = 'Register Now →'; btnDisabled = ''; }
 
       const card = document.createElement('div');
-      card.className = 'event-card';
-
-      const poster = ev.poster && ev.poster !== 'assets/img/default-event.jpg' ? ev.poster : '';
-      const cardBg = poster ? `style="background-image: url('${poster}'); background-size: cover; background-position: center; border-radius: 12px 12px 0 0;"` : '';
+      card.className    = 'event-card';
+      card.dataset.category = catSlug;
+      card.dataset.name     = ev.name;
+      card.dataset.date     = ev.event_date;
 
       card.innerHTML = `
-        <div class="event-card-image ${catClass}" ${cardBg}>
+        <div class="event-card-image ${hasPoster ? '' : catClass}" ${imageStyle}>
           <span class="event-category-badge">${ev.category}</span>
-          ${poster ? '' : getCategoryEmoji(ev.category)}
+          ${hasPoster ? '' : `<span style="position:relative;z-index:3;filter:drop-shadow(0 2px 8px rgba(0,0,0,.4))">${getCategoryEmoji(catSlug)}</span>`}
         </div>
         <div class="event-card-body">
           <h3 class="event-title">${ev.name}</h3>
-          
+
           <div class="event-meta-list">
             <div class="meta-item">
               <span class="meta-icon">📅</span>
@@ -162,38 +180,40 @@
               <span class="meta-icon">📍</span>
               <span>${ev.venue}</span>
             </div>
+            ${!isPast && spotsLeft > 0 && spotsLeft <= 20 ? `<div class="meta-item" style="color:#f97316;border-color:rgba(249,115,22,.25);background:rgba(249,115,22,.07);">🔥 ${spotsLeft} spots left</div>` : ''}
           </div>
-          
+
           <p class="event-description">${ev.description}</p>
-          
+
           <div class="capacity-container">
             <div class="capacity-header">
               <span>Spots Filled</span>
               <span>${pct}%</span>
             </div>
             <div class="capacity-progress">
-              <div class="progress-fill ${pct >= 100 ? 'full' : ''}" style="width: ${pct}%"></div>
+              <div class="progress-fill ${pct >= 100 ? 'full' : ''}" style="width:${pct}%"></div>
             </div>
-            <div style="font-size: 0.7rem; color: #9ca3af; margin-top: 4px;">
-              ${ev.registered_count} / ${ev.max_capacity} students registered
+            <div style="font-size:0.7rem;color:rgba(255,255,255,0.3);margin-top:6px;">
+              ${ev.registered_count} / ${ev.max_capacity} registered
             </div>
           </div>
 
           <div class="organizer-info">
-            <span>👤 ${ev.organizer_name || 'Tech Organizer'}</span>
+            <span>👤 ${ev.organizer_name || 'Organizer'}</span>
           </div>
-          
+
           <div class="register-btn-wrap">
-            <button class="btn btn-primary register-btn" 
-                    style="width: 100%;"
-                    data-id="${ev.id}" 
+            <button class="btn btn-primary register-btn"
+                    style="width:100%;"
+                    data-id="${ev.id}"
                     data-name="${ev.name}"
-                    ${isPast || ev.registered_count >= ev.max_capacity ? 'disabled' : ''}>
-              ${isPast ? 'Completed' : (ev.registered_count >= ev.max_capacity ? 'Event Full' : 'Register Now')}
+                    ${btnDisabled}>
+              ${btnLabel}
             </button>
           </div>
         </div>
       `;
+
       eventsGrid.appendChild(card);
     });
   }
