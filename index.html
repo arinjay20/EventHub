@@ -19,10 +19,11 @@
   <!-- Navigation -->
   <nav class="navbar" id="navbar">
     <div class="nav-container">
-<div class="logo">
-  <img src="https://geu.ac.in/wp-content/uploads/2023/03/geu_white.svg" alt="GEU Logo" style="height: 50px; width: auto; vertical-align: middle; margin-right: 12px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.15));">
-  EventHub
-</div>
+      <div class="logo">
+        <img src="https://geu.ac.in/wp-content/uploads/2023/03/geu_white.svg" alt="GEU Logo"
+          style="height: 50px; width: auto; vertical-align: middle; margin-right: 12px; filter: drop-shadow(0 0 10px rgba(255,255,255,0.15));">
+        EventHub
+      </div>
       <ul class="navbar-menu" id="navbarMenu">
         <li><a href="index.html">Home</a></li>
         <li><a href="events.html">Events</a></li>
@@ -43,15 +44,19 @@
   </div>
 
   <!-- Hero Section -->
-  <section class="video-bg" style="margin-top:0; height: calc(100vh - 80px - 40px);">
-    <iframe
-      src="https://www.youtube.com/embed/K9HiKoxpCcg?autoplay=1&mute=1&loop=1&playlist=K9HiKoxpCcg&controls=0&modestbranding=1&showinfo=0&vq=hd1080"
-      frameborder="0"
-      allow="autoplay; encrypted-media"
-      allowfullscreen
-      title="Hero Background Video">
-    </iframe>
-    <div class="overlay" style="background: linear-gradient(135deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.4) 100%); backdrop-filter: saturate(120%) blur(0px);"></div>
+  <section class="video-bg hero-animated-bg" style="margin-top:0; height: calc(100vh - 80px - 40px);">
+    <!-- Animated Aurora Background (replaces broken YouTube embed) -->
+    <div class="hero-aurora">
+      <div class="aurora-layer aurora-1"></div>
+      <div class="aurora-layer aurora-2"></div>
+      <div class="aurora-layer aurora-3"></div>
+    </div>
+    <!-- Floating Particles -->
+    <div class="hero-particles" id="heroParticles"></div>
+
+    <div class="overlay"
+      style="background: linear-gradient(180deg, rgba(11,12,16,0.45) 0%, rgba(11,12,16,0.2) 50%, rgba(11,12,16,0.75) 100%);">
+    </div>
     <div class="content">
       <div
         style="display:inline-block; background:rgba(99, 102, 241, 0.2); border:1px solid rgba(99, 102, 241, 0.4); border-radius:50px; padding:6px 18px; font-size:0.85rem; color:#fff; margin-bottom:20px; backdrop-filter:blur(8px); font-weight: 600; letter-spacing: 0.5px;">
@@ -65,12 +70,169 @@
         learning and fun opportunities on campus!
       </p>
       <div class="hero-cta">
-        <a href="events.html" class="btn btn-primary btn-lg" style="box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);">🎯 Browse Events</a>
+        <a href="events.html" class="btn btn-primary btn-lg" style="box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);">🎯
+          Browse Events</a>
       </div>
     </div>
 
     <div class="scroll-indicator">↓</div>
   </section>
+
+  <style>
+    /* ===== ANIMATED HERO BACKGROUND ===== */
+    .hero-animated-bg {
+      background: #0b0c10;
+      overflow: hidden;
+    }
+
+    .hero-aurora {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+
+    .aurora-layer {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.55;
+      animation-timing-function: ease-in-out;
+      animation-iteration-count: infinite;
+      animation-direction: alternate;
+    }
+
+    .aurora-1 {
+      width: 80vw;
+      height: 80vw;
+      top: -25%;
+      left: -20%;
+      background: radial-gradient(circle, rgba(99, 102, 241, 0.8) 0%, rgba(99, 102, 241, 0.3) 50%, transparent 70%);
+      animation: auroraMove1 12s infinite alternate ease-in-out;
+    }
+
+    .aurora-2 {
+      width: 70vw;
+      height: 70vw;
+      bottom: -30%;
+      right: -15%;
+      background: radial-gradient(circle, rgba(236, 72, 153, 0.7) 0%, rgba(236, 72, 153, 0.25) 50%, transparent 70%);
+      animation: auroraMove2 15s infinite alternate ease-in-out;
+    }
+
+    .aurora-3 {
+      width: 60vw;
+      height: 60vw;
+      top: 10%;
+      right: 10%;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.5) 0%, rgba(16, 185, 129, 0.15) 50%, transparent 70%);
+      animation: auroraMove3 10s infinite alternate ease-in-out;
+    }
+
+    @keyframes auroraMove1 {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      50% {
+        transform: translate(8vw, 5vh) scale(1.1);
+      }
+
+      100% {
+        transform: translate(-5vw, 10vh) scale(0.95);
+      }
+    }
+
+    @keyframes auroraMove2 {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      50% {
+        transform: translate(-10vw, -8vh) scale(1.15);
+      }
+
+      100% {
+        transform: translate(5vw, -12vh) scale(0.9);
+      }
+    }
+
+    @keyframes auroraMove3 {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      50% {
+        transform: translate(12vw, 8vh) scale(1.2);
+      }
+
+      100% {
+        transform: translate(-8vw, 4vh) scale(0.85);
+      }
+    }
+
+    /* Floating Particles */
+    .hero-particles {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .hero-particles span {
+      position: absolute;
+      display: block;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      animation: floatParticle linear infinite;
+    }
+  </style>
+  <script>
+    /* Generate floating particle dots for the hero */
+    (function () {
+      const container = document.getElementById('heroParticles');
+      if (!container) return;
+      for (let i = 0; i < 28; i++) {
+        const span = document.createElement('span');
+        const size = Math.random() * 6 + 2;
+        const left = Math.random() * 100;
+        const delay = Math.random() * 12;
+        const duration = Math.random() * 15 + 10;
+        const opacity = Math.random() * 0.4 + 0.1;
+        span.style.cssText = `
+          width:${size}px; height:${size}px;
+          left:${left}%;
+          bottom:-${size}px;
+          opacity:${opacity};
+          animation-duration:${duration}s;
+          animation-delay:-${delay}s;
+        `;
+        container.appendChild(span);
+      }
+    })();
+  </script>
+  <!-- Add float animation for particles -->
+  <style>
+    @keyframes floatParticle {
+      0% {
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+      }
+
+      10% {
+        opacity: 1;
+      }
+
+      90% {
+        opacity: 0.8;
+      }
+
+      100% {
+        transform: translateY(-110vh) translateX(calc(var(--drift, 0) * 80px));
+        opacity: 0;
+      }
+    }
+  </style>
 
   <!-- Stats Section -->
   <section class="stats-section">
@@ -133,20 +295,242 @@
     </div>
   </section>
 
+  <!-- Swiper CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
   <!-- Featured Events Section -->
-  <section class="featured-section">
+  <section class="featured-section" id="featuredSection">
     <div class="container">
-      <div class="section-head">
-        <h2>⭐ Featured Events</h2>
+      <div class="section-head" style="margin-bottom: 36px; align-items: center;">
+        <div>
+          <h2 style="margin-bottom: 6px;">⭐ Featured Events</h2>
+          <p style="color:rgba(255,255,255,0.4); font-size:0.9rem; margin:0;">Live events auto-update every few seconds
+          </p>
+        </div>
         <a href="events.html" class="btn btn-primary btn-sm">View All Events →</a>
       </div>
-      <div id="featuredGrid" class="grid grid-3">
-        <!-- Dynamically loaded -->
-        <div style="grid-column: 1 / -1; text-align: center; color: #6b7280; padding: 40px 0;">⏳ Loading featured
-          events...</div>
+
+      <!-- 3-Grid Swiper -->
+      <div class="featured-swiper-outer">
+        <!-- Nav Arrows -->
+        <button class="feat-nav-btn feat-nav-prev" id="featPrev" aria-label="Previous">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round">
+            <polyline points="15,18 9,12 15,6" />
+          </svg>
+        </button>
+        <button class="feat-nav-btn feat-nav-next" id="featNext" aria-label="Next">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round">
+            <polyline points="9,6 15,12 9,18" />
+          </svg>
+        </button>
+
+        <div class="swiper featuredSwiper">
+          <div class="swiper-wrapper" id="featuredGrid">
+            <!-- Skeleton loaders -->
+            <div class="swiper-slide">
+              <div class="ev-skeleton"></div>
+            </div>
+            <div class="swiper-slide">
+              <div class="ev-skeleton"></div>
+            </div>
+            <div class="swiper-slide">
+              <div class="ev-skeleton"></div>
+            </div>
+          </div>
+          <div class="swiper-pagination featuredPagination"></div>
+        </div>
       </div>
     </div>
   </section>
+
+  <style>
+    /* ===== FEATURED EVENTS — 3-GRID SWIPER ===== */
+    #featuredSection {
+      padding: 80px 0;
+    }
+
+    .featured-swiper-outer {
+      position: relative;
+      padding: 0 0 56px;
+    }
+
+    /* The swiper itself — clips at the container edges */
+    .featuredSwiper {
+      overflow: hidden;
+      border-radius: 0;
+    }
+
+    .featuredSwiper .swiper-slide {
+      height: auto;
+      /* let cards stretch to same height */
+    }
+
+    /* ── Card entrance animation ── */
+    @keyframes cardSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.97);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .featuredSwiper .event-card {
+      animation: cardSlideIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+      height: 100%;
+    }
+
+    /* ── LIVE badge on card ── */
+    .live-event-badge {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #10b981;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 50px;
+      backdrop-filter: blur(8px);
+      z-index: 25;
+    }
+
+    .live-event-badge .live-dot-sm {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 6px #10b981;
+      animation: livePulseSm 1.5s infinite;
+    }
+
+    @keyframes livePulseSm {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      50% {
+        transform: scale(1.5);
+        opacity: 0.6;
+      }
+    }
+
+    /* ── Pagination dots ── */
+    .featuredPagination {
+      bottom: 0 !important;
+    }
+
+    .featuredPagination .swiper-pagination-bullet {
+      width: 8px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      opacity: 1;
+      transition: all 0.3s ease;
+    }
+
+    .featuredPagination .swiper-pagination-bullet-active {
+      background: linear-gradient(135deg, #6366f1, #ec4899);
+      width: 28px;
+      border-radius: 4px;
+    }
+
+    /* ── Nav arrows ── */
+    .feat-nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(calc(-50% - 28px));
+      z-index: 20;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      backdrop-filter: blur(10px);
+    }
+
+    .feat-nav-btn:hover {
+      background: rgba(99, 102, 241, 0.35);
+      border-color: rgba(99, 102, 241, 0.6);
+      color: #fff;
+      box-shadow: 0 0 24px rgba(99, 102, 241, 0.5);
+      transform: translateY(calc(-50% - 28px)) scale(1.12);
+    }
+
+    .feat-nav-prev {
+      left: -24px;
+    }
+
+    .feat-nav-next {
+      right: -24px;
+    }
+
+    /* ── Skeleton loader ── */
+    .ev-skeleton {
+      height: 440px;
+      border-radius: 24px;
+      background: linear-gradient(90deg,
+          rgba(255, 255, 255, 0.03) 0%,
+          rgba(255, 255, 255, 0.07) 50%,
+          rgba(255, 255, 255, 0.03) 100%);
+      background-size: 200% 100%;
+      animation: shimmer 1.6s infinite linear;
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: 200% 0;
+      }
+
+      100% {
+        background-position: -200% 0;
+      }
+    }
+
+    /* ── Progress bar animate on entrance ── */
+    @keyframes growBar {
+      from {
+        width: 0 !important;
+      }
+
+      to {
+        /* width set inline */
+      }
+    }
+
+    .progress-fill.animate-in {
+      animation: growBar 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    @media (max-width: 900px) {
+      .feat-nav-prev {
+        left: 0;
+      }
+
+      .feat-nav-next {
+        right: 0;
+      }
+    }
+  </style>
 
   <!-- ===== LIVE ACTIVITY FEED ===== -->
   <section class="live-section" id="liveFeedSection">
@@ -157,7 +541,7 @@
           <span class="live-dot"></span>
           Live Member Activity
         </div>
-        
+
       </div>
 
       <!-- Live mini-stats -->
@@ -174,15 +558,25 @@
           <div class="live-stat-num" id="lsTotalRegs">–</div>
           <div class="live-stat-label">Registrations</div>
         </div>
-          <div class="live-stat-card community-spotlight" style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.15); backdrop-filter: blur(12px);">
-            <h4 style="margin-bottom: 20px; font-size: 1.2rem; color: #ffffff; font-weight: 800;">Join the Community</h4>
-            <div id="liveAvatarStack" class="avatar-stack" style="display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
-              <div class="avatar" style="width: 50px; height: 50px; border-radius: 50%; background: var(--color-primary); border: 2px solid #fff; margin-left: -15px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; color: #fff; box-shadow: var(--shadow-md);">GE</div>
-              <div class="avatar" style="width: 50px; height: 50px; border-radius: 50%; background: var(--color-secondary); border: 2px solid #fff; margin-left: -15px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; color: #fff; box-shadow: var(--shadow-md);">EH</div>
-            </div>
-            <p id="communityText" style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.7); line-height: 1.5; font-weight: 500;">Connecting **10+** students across Graphic Era.</p>
-            <div class="live-pulse" style="width: 10px; height: 10px; border-radius: 50%; background: var(--color-success); box-shadow: 0 0 10px var(--color-success); margin: 20px auto 0; animation: livePulse 2s infinite;"></div>
+        <div class="live-stat-card community-spotlight"
+          style="background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.15); backdrop-filter: blur(12px);">
+          <h4 style="margin-bottom: 20px; font-size: 1.2rem; color: #ffffff; font-weight: 800;">Join the Community</h4>
+          <div id="liveAvatarStack" class="avatar-stack"
+            style="display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+            <div class="avatar"
+              style="width: 50px; height: 50px; border-radius: 50%; background: var(--color-primary); border: 2px solid #fff; margin-left: -15px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; color: #fff; box-shadow: var(--shadow-md);">
+              GE</div>
+            <div class="avatar"
+              style="width: 50px; height: 50px; border-radius: 50%; background: var(--color-secondary); border: 2px solid #fff; margin-left: -15px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.9rem; color: #fff; box-shadow: var(--shadow-md);">
+              EH</div>
           </div>
+          <p id="communityText"
+            style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.7); line-height: 1.5; font-weight: 500;">Connecting
+            **10+** students across Graphic Era.</p>
+          <div class="live-pulse"
+            style="width: 10px; height: 10px; border-radius: 50%; background: var(--color-success); box-shadow: 0 0 10px var(--color-success); margin: 20px auto 0; animation: livePulse 2s infinite;">
+          </div>
+        </div>
       </div>
 
       <!-- Recent members grid -->
@@ -255,33 +649,41 @@
     <div class="modal" style="max-width: 500px;">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
         <h3 id="regEventTitle" style="font-weight:800; font-size:1.4rem;">Register for Event</h3>
-        <button class="btn-ghost" onclick="document.getElementById('regModal').classList.remove('active')" style="padding:4px 8px; font-size:1.2rem;">✕</button>
+        <button class="btn-ghost" onclick="document.getElementById('regModal').classList.remove('active')"
+          style="padding:4px 8px; font-size:1.2rem;">✕</button>
       </div>
       <form id="regForm" style="display:flex; flex-direction:column; gap:16px;">
         <input type="hidden" id="regEventId">
         <div class="form-group">
           <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">Full Name</label>
-          <input type="text" id="regFullName" required placeholder="Enter your full name" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+          <input type="text" id="regFullName" required placeholder="Enter your full name"
+            style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
           <div class="form-group">
             <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">Course</label>
-            <input type="text" id="regCourse" required placeholder="e.g. B.Tech" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+            <input type="text" id="regCourse" required placeholder="e.g. B.Tech"
+              style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
           </div>
           <div class="form-group">
             <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">Branch</label>
-            <input type="text" id="regBranch" required placeholder="e.g. CSE" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+            <input type="text" id="regBranch" required placeholder="e.g. CSE"
+              style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
           </div>
         </div>
         <div class="form-group">
-          <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">Student ID / Roll No</label>
-          <input type="text" id="regStudentId" required placeholder="Enter your official ID" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+          <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">Student ID / Roll
+            No</label>
+          <input type="text" id="regStudentId" required placeholder="Enter your official ID"
+            style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
         </div>
         <div class="form-group">
           <label style="display:block; margin-bottom:6px; font-weight:600; font-size:0.9rem;">Phone Number</label>
-          <input type="tel" id="regPhone" required placeholder="Enter your contact number" style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
+          <input type="tel" id="regPhone" required placeholder="Enter your contact number"
+            style="width:100%; padding:10px; border:1px solid #ddd; border-radius:8px;">
         </div>
-        <button type="submit" class="btn btn-primary" style="padding:12px; margin-top:8px;">Confirm Registration</button>
+        <button type="submit" class="btn btn-primary" style="padding:12px; margin-top:8px;">Confirm
+          Registration</button>
       </form>
     </div>
   </div>
@@ -395,13 +797,13 @@
         const data = await res.json();
         if (data.success && data.events.length > 0) {
           ticker.innerHTML = data.events.map(ev => {
-              const icons = { technology: '🤖', cultural: '🎭', sports: '⚽', academic: '📚', workshop: '🛠️' };
-              const date = new Date(ev.event_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
-              return `${icons[ev.category.toLowerCase()] || '📅'} ${ev.name} – ${date} | Register Now! &nbsp;&nbsp;&nbsp;`;
+            const icons = { technology: '🤖', cultural: '🎭', sports: '⚽', academic: '📚', workshop: '🛠️' };
+            const date = new Date(ev.event_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+            return `${icons[ev.category.toLowerCase()] || '📅'} ${ev.name} – ${date} | Register Now! &nbsp;&nbsp;&nbsp;`;
           }).join(' ') + data.events.map(ev => {
-              const icons = { technology: '🤖', cultural: '🎭', sports: '⚽', academic: '📚', workshop: '🛠️' };
-              const date = new Date(ev.event_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
-              return `${icons[ev.category.toLowerCase()] || '📅'} ${ev.name} – ${date} &nbsp;&nbsp;&nbsp;`;
+            const icons = { technology: '🤖', cultural: '🎭', sports: '⚽', academic: '📚', workshop: '🛠️' };
+            const date = new Date(ev.event_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+            return `${icons[ev.category.toLowerCase()] || '📅'} ${ev.name} – ${date} &nbsp;&nbsp;&nbsp;`;
           }).join(' ');
         }
       } catch (e) {
@@ -409,92 +811,137 @@
       }
     }
 
-    /* ── Featured Events (Fresh load from DB) ── */
+    /* ── Featured Events – 3-Grid Auto-Swiper ── */
+    let featuredSwiperInstance = null;
+
+    function animateProgressBars(swiper) {
+      /* Animate the progress bars of all currently visible slides */
+      const visibleSlides = swiper.slides.filter(s =>
+        s.classList.contains('swiper-slide-visible') || s.classList.contains('swiper-slide-active')
+      );
+      visibleSlides.forEach(slide => {
+        const fill = slide.querySelector('.progress-fill');
+        if (fill) {
+          const target = fill.dataset.width || fill.style.width;
+          fill.style.width = '0';
+          setTimeout(() => { fill.style.width = target; }, 80);
+        }
+      });
+    }
+
     async function fetchFeaturedEvents() {
-      const grid = document.getElementById('featuredGrid');
-      if (!grid) return;
+      const wrapper = document.getElementById('featuredGrid');
+      if (!wrapper) return;
 
       try {
-        const res = await fetch('php/get_events.php?sort=date&limit=3');
+        const res = await fetch('php/get_events.php?sort=date&limit=9');
         const data = await res.json();
-        if (data.success && data.events.length > 0) {
-          grid.innerHTML = data.events.slice(0, 3).map((ev, index) => {
-            const icons = { technology: '🤖', cultural: '🎭', sports: '⚽', academic: '📚', workshop: '🛠️' };
-            const icon = icons[ev.category.toLowerCase()] || '📅';
-            const date = new Date(ev.event_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
-            const catClass = `cat-bg-${ev.category.toLowerCase()}`;
-            const pct = Math.min(100, Math.round((ev.registered_count / (ev.max_capacity || 100)) * 100));
 
-            const poster = ev.poster ? ev.poster : '';
-            const cardBg = poster ? `style="background-image: url('${poster}'); background-size: cover; background-position: center; border-radius: 12px 12px 0 0;"` : '';
+        if (data.success && data.events.length > 0) {
+          const icons = { technology: '🤖', cultural: '🎭', sports: '⚽', academic: '📚', workshop: '🛠️' };
+          const now = new Date();
+
+          wrapper.innerHTML = data.events.map((ev, i) => {
+            const icon = icons[ev.category.toLowerCase()] || '📅';
+            const dateStr = new Date(ev.event_date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+            const catCl = `cat-bg-${ev.category.toLowerCase()}`;
+            const pct = Math.min(100, Math.round((ev.registered_count / (ev.max_capacity || 100)) * 100));
+            const evDate = new Date(ev.event_date);
+            const isLive = evDate >= now;                       /* upcoming = show LIVE badge */
+            const poster = ev.poster || '';
+            const imgStyle = poster
+              ? `style="background-image:url('${poster}');background-size:cover;background-position:center;border-radius:12px 12px 0 0;"`
+              : '';
+            const delay = (i % 3) * 0.12;                         /* stagger within each group of 3 */
 
             return `
-              <div class="event-card slide-element" style="transition-delay: ${index * 0.15}s;">
-                <div class="event-card-image ${catClass}" ${cardBg}>
-                  <span class="event-category-badge">${ev.category}</span>
-                  ${poster ? '' : icon}
-                </div>
-                <div class="event-card-body">
-                  <h3 class="event-title">${ev.name}</h3>
-                  <div class="event-meta-list">
-                    <div class="meta-item"><span>📅</span><span>${date}</span></div>
-                    <div class="meta-item"><span>📍</span><span>${ev.venue}</span></div>
+              <div class="swiper-slide">
+                <div class="event-card" style="height:100%; animation-delay:${delay}s;">
+                  <div class="event-card-image ${catCl}" ${imgStyle}>
+                    <span class="event-category-badge">${ev.category}</span>
+                    ${poster ? '' : icon}
+                    ${isLive ? `<div class="live-event-badge"><span class="live-dot-sm"></span>LIVE</div>` : ''}
                   </div>
-                  <p class="event-description">${ev.description}</p>
-                  
-                  <div class="capacity-container">
-                    <div class="capacity-header">
-                      <span>Registration</span>
-                      <span>${pct}% filled</span>
+                  <div class="event-card-body">
+                    <h3 class="event-title">${ev.name}</h3>
+                    <div class="event-meta-list">
+                      <div class="meta-item"><span>📅</span><span>${dateStr}</span></div>
+                      <div class="meta-item"><span>📍</span><span>${ev.venue}</span></div>
                     </div>
-                    <div class="capacity-progress">
-                      <div class="progress-fill ${pct >= 100 ? 'full' : ''}" style="width: ${pct}%"></div>
+                    <p class="event-description">${ev.description}</p>
+                    <div class="capacity-container">
+                      <div class="capacity-header">
+                        <span>Registration</span><span>${pct}% filled</span>
+                      </div>
+                      <div class="capacity-progress">
+                        <div class="progress-fill ${pct >= 100 ? 'full' : ''}" data-width="${pct}%" style="width:${pct}%"></div>
+                      </div>
                     </div>
-                  </div>
-
-                  <div class="register-btn-wrap">
-                    <a href="javascript:void(0)" 
-                       onclick="openRegisterModal('${ev.id}', '${ev.name.replace(/'/g, "\\'")}')" 
-                       class="btn btn-primary btn-sm" 
-                       style="width:100%">
-                       Register Now
-                    </a>
+                    <div class="register-btn-wrap">
+                      <a href="javascript:void(0)"
+                         onclick="openRegisterModal('${ev.id}','${ev.name.replace(/'/g, "\\'")}')"
+                         class="btn btn-primary btn-sm" style="width:100%">Register Now</a>
+                    </div>
                   </div>
                 </div>
-              </div>
-            `;
+              </div>`;
           }).join('');
 
-          // Observe dynamically loaded elements to trigger animation exactly when scrolled into view
-          const observer = new IntersectionObserver((entries, obs) => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                obs.unobserve(entry.target);
-                // Remove transition-delay after animation finishes so hover effects stay instant
-                setTimeout(() => { entry.target.style.transitionDelay = '0s'; }, 800);
-              }
-            });
-          }, { threshold: 0.15 });
+          /* ── Init / Re-init Swiper ── */
+          if (featuredSwiperInstance) { featuredSwiperInstance.destroy(true, true); }
 
-          grid.querySelectorAll('.slide-element').forEach(el => observer.observe(el));
-          
+          featuredSwiperInstance = new Swiper('.featuredSwiper', {
+            slidesPerView: 3,           /* always show 3 cards */
+            slidesPerGroup: 3,          /* swipe all 3 at once */
+            spaceBetween: 24,
+            loop: data.events.length >= 6,
+            grabCursor: true,
+            speed: 950,
+            keyboard: { enabled: true },
+            autoplay: {
+              delay: 3500,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true
+            },
+            pagination: {
+              el: '.featuredPagination',
+              clickable: true
+            },
+            navigation: {
+              prevEl: '#featPrev',
+              nextEl: '#featNext'
+            },
+            breakpoints: {
+              0: { slidesPerView: 1, slidesPerGroup: 1, spaceBetween: 16 },
+              640: { slidesPerView: 2, slidesPerGroup: 2, spaceBetween: 20 },
+              1024: { slidesPerView: 3, slidesPerGroup: 3, spaceBetween: 24 }
+            },
+            on: {
+              afterInit(swiper) { animateProgressBars(swiper); },
+              slideChange(swiper) { animateProgressBars(swiper); }
+            }
+          });
+
         } else {
-          grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #6b7280; padding: 40px 0;">No events currently active.</div>';
+          wrapper.innerHTML = '<div class="swiper-slide" style="grid-column:1/-1;text-align:center;color:#6b7280;padding:60px 0;">No events currently active.</div>';
         }
       } catch (e) {
         console.error('Error loading featured events:', e);
       }
     }
     fetchFeaturedEvents();
+    /* Re-fetch every 30 s so new live events appear automatically */
+    setInterval(fetchFeaturedEvents, 30000);
     updateTicker();
-    
+
     // Live feed polling
     if (document.getElementById('liveFeedSection')) {
       pollFeed();
       setInterval(pollFeed, 5000);
     }
   </script>
+  <!-- Swiper JS -->
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 </body>
 
 </html>
