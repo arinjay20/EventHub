@@ -2052,3 +2052,65 @@ select.sort-select {
   .Dashboard-layout { flex-direction: column; }
   .sidebar { width: 100%; height: auto; position: static; border-right: none; border-bottom: 1px solid var(--glass-border); }
 }
+
+/* ============================================================
+   RESPONSIVE DESIGN (MOBILE & TABLET)
+   ============================================================ */
+
+/* ===== TABLET / SMALL DESKTOP (Max 900px) ===== */
+@media (max-width: 900px) {
+  .grid-3 { grid-template-columns: repeat(2, 1fr) !important; }
+  .hero-title { font-size: 2.5rem; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .dashboard-top-bar { flex-direction: column; gap: 15px; align-items: stretch; }
+  .dash-search { flex: 1; }
+  .dash-actions { justify-content: flex-end; }
+}
+
+/* ===== MOBILE (Max 768px) ===== */
+@media (max-width: 768px) {
+  /* Layout & Padding */
+  .section { padding: var(--space-xl) 0; }
+  .container { padding: 0 var(--space-md); }
+  
+  /* Navbar & Hamburger */
+  .hamburger { display: flex !important; z-index: 1001; }
+  .navbar-menu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 280px;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.98);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    flex-direction: column !important;
+    justify-content: center;
+    padding: var(--space-xl);
+    gap: 24px;
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 1000;
+  }
+  .navbar-menu.open { right: 0; box-shadow: -10px 0 50px rgba(0,0,0,0.5); }
+  
+  /* Hero Section */
+  .hero-title { font-size: 2rem; }
+  .hero-subtitle { font-size: 1rem; }
+  .video-bg iframe {
+    width: 250vw !important; 
+    height: 140.625vw !important;
+  }
+  
+  /* Grids & Columns */
+  .grid-3, .features-grid, .live-stats-row { grid-template-columns: 1fr !important; }
+  .events-toolbar { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .filter-group { flex-wrap: wrap; }
+  
+  /* Dashboard & Footer */
+  .footer-content { grid-template-columns: 1fr; gap: 30px; }
+  .data-table-container { padding-bottom: 10px; }
+  .quick-actions-bar { flex-direction: column; }
+  .quick-btn { width: 100%; text-align: center; }
+  .chart-bar { display: none; }
+}
