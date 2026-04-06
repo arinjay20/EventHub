@@ -570,3 +570,27 @@ document.addEventListener('submit', async (e) => {
     };
 })();
 
+/* ===== SCROLL REVEAL OBSERVER ===== */
+document.addEventListener("DOMContentLoaded", () => {
+    const reveals = document.querySelectorAll(".reveal-up");
+    if(!reveals.length) return;
+
+    const revealOptions = {
+        threshold: 0.1, // Trigger when 10% of element is visible
+        rootMargin: "0px 0px -50px 0px" // Trigger slightly before it hits the bottom
+    };
+
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            // Add the active class
+            entry.target.classList.add("reveal-visible");
+            // Optional: unobserve if you only want it to animate once
+            observer.unobserve(entry.target);
+        });
+    }, revealOptions);
+
+    reveals.forEach(reveal => {
+        revealObserver.observe(reveal);
+    });
+});
