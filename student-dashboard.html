@@ -595,7 +595,7 @@
         document.getElementById('sidebarDept').textContent = u.department || u.email;
         document.getElementById('sidebarRole').textContent = u.role;
         const name = u.first_name[0].toUpperCase() + u.first_name.slice(1);
-        document.getElementById('welcomeMsg').textContent  = '👋 Welcome back, ' + name + '!';
+        document.getElementById('welcomeMsg').textContent  = 'Welcome back, ' + name + '!';
 
         /* Stats */
         flashNum('statReg', data.events_registered);
