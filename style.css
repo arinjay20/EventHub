@@ -3,15 +3,15 @@
    Global Stylesheet
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
 
 /* ===== CSS VARIABLES (PROFESSIONAL CLEAN STYLE) ===== */
 :root {
   /* Exact target palette */
   --color-primary: #6366f1; /* Target Indigo */
   --color-primary-dark: #4f46e5;
-  --color-secondary: #ec4899; /* Target Pink */
-  --color-accent: #10b981;
+  --color-secondary: #3b82f6; /* Target Royal Blue */
+  --color-accent: #312e81; /* Deep Indigo */
   --color-white: #ffffff;
   --color-black: #000000; /* Deep ambient black background */
   --color-gray-100: #050505; /* Pitch ambient space */
@@ -27,7 +27,7 @@
   --color-info: #3b82f6;
 
   /* Premium Gradients */
-  --gradient-neon: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+  --gradient-neon: linear-gradient(135deg, #3b82f6 0%, #312e81 100%);
   --gradient-dark: linear-gradient(135deg, #000000 0%, #0a0a0a 100%);
 
   /* Sidebar Profile & Nav */
@@ -46,7 +46,7 @@
   --radius-md: 14px;
   --radius-lg: 18px; 
   --radius-xl: 32px;
-  --radius-full: 9999px;
+  --radius-full: 10px; /* Modern sleek button curve */
 
   --space-xs: 4px;
   --space-sm: 8px;
@@ -151,9 +151,10 @@ input, select, textarea { font-family: inherit; }
 
 /* ===== TYPOGRAPHY ===== */
 h1, h2, h3, h4, h5 {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-weight: 700;
   line-height: 1.2;
+  letter-spacing: -0.5px;
 }
 
 .text-gradient {
@@ -251,7 +252,7 @@ h1, h2, h3, h4, h5 {
 .logo, .navbar-brand {
   display: flex;
   align-items: center;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
   font-size: 1.5rem;
   font-weight: 800;
   color: #ffffff;
@@ -619,49 +620,14 @@ h1, h2, h3, h4, h5 {
   height: 100%;
 }
 
-/* Animated glow border on hover */
-.event-card::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: 23px;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(99,102,241,0) 0%, rgba(99,102,241,0.6) 50%, rgba(236,72,153,0.4) 100%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  pointer-events: none;
-  z-index: 2;
-}
-
-/* Shimmer sweep */
-.event-card::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -120%;
-  width: 55%;
-  height: 100%;
-  background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%);
-  transform: skewX(-20deg);
-  z-index: 5;
-  transition: left 0.8s cubic-bezier(0.19, 1, 0.22, 1);
-  pointer-events: none;
-}
-
-.event-card:hover::before { opacity: 1; }
-.event-card:hover::after  { left: 180%; }
-
+/* Professional soft-lift on hover (Removed loud neon sweeps) */
 .event-card:hover {
-  transform: translateY(-10px);
+  transform: translateY(-6px);
   box-shadow:
-    0 24px 60px -10px rgba(99, 102, 241, 0.35),
-    0 8px 24px rgba(0,0,0,0.6),
-    inset 0 1px 0 rgba(255,255,255,0.1);
-  border-color: rgba(99,102,241,0.4);
+    0 20px 40px -10px rgba(59, 130, 246, 0.15),
+    0 8px 16px rgba(0,0,0,0.8),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  border-color: rgba(59, 130, 246, 0.3);
 }
 
 .event-card-image {
@@ -748,8 +714,8 @@ h1, h2, h3, h4, h5 {
 
 .event-title {
   font-size: 1.18rem;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 800;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
   color: #f1f5f9;
   margin-bottom: 14px;
   margin-top: 10px;
