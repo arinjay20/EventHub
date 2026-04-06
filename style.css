@@ -13,10 +13,10 @@
   --color-secondary: #ec4899; /* Target Pink */
   --color-accent: #10b981;
   --color-white: #ffffff;
-  --color-black: #0b0c10; /* Deep black background */
-  --color-gray-100: #1f2833; /* Dark slate */
+  --color-black: #000000; /* Deep ambient black background */
+  --color-gray-100: #050505; /* Pitch ambient space */
   --color-gray-200: #c5c6c7; /* Light text gray */
-  --color-gray-300: rgba(255, 255, 255, 0.1); /* Transparent borders */
+  --color-gray-300: rgba(255, 255, 255, 0.06); /* Ambient subtle borders */
   --color-gray-400: #94a3b8;
   --color-gray-600: #64748b;
   --color-gray-700: #475569;
@@ -28,10 +28,10 @@
 
   /* Premium Gradients */
   --gradient-neon: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
-  --gradient-dark: linear-gradient(135deg, #0b0c10 0%, #1f2833 100%);
+  --gradient-dark: linear-gradient(135deg, #000000 0%, #0a0a0a 100%);
 
   /* Sidebar Profile & Nav */
-  --sidebar-bg: #0b0c10; 
+  --sidebar-bg: #000000; 
   --sidebar-active: rgba(99, 102, 241, 0.2); 
 
   --glass-bg: rgba(255, 255, 255, 0.05); 
@@ -69,10 +69,10 @@
 }
 
 .glass-dark {
-  background: rgba(15, 23, 42, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(5, 5, 5, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 /* ===== RESET ===== */
@@ -141,15 +141,7 @@ body {
   .container { padding: 0 var(--space-md); }
 }
 
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  background: 
-    radial-gradient(circle at 0% 0%, rgba(108, 99, 255, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 100% 100%, rgba(245, 87, 108, 0.05) 0%, transparent 50%);
-}
+/* Removed body::before for pure dark ambient aesthetic */
 
 img { max-width: 100%; display: block; }
 a { text-decoration: none; color: inherit; }
@@ -204,20 +196,20 @@ h1, h2, h3, h4, h5 {
   display: flex;
   align-items: center;
   transition: var(--transition-slow);
-  background: rgba(11, 12, 16, 0.4);
+  background: rgba(5, 5, 5, 0.65);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
   color: #ffffff;
 }
 
 .navbar.scrolled,
 .navbar.solid {
-  background: rgba(15, 23, 42, 0.9);
+  background: rgba(0, 0, 0, 0.85);
   height: 70px;
   backdrop-filter: blur(25px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 10px 40px rgba(0,0,0,0.6);
 }
 
 .logo, 
@@ -610,7 +602,7 @@ h1, h2, h3, h4, h5 {
 
 /* ===== EVENT CARDS – PREMIUM DARK GLASSMORPHISM ===== */
 .event-card {
-  background: rgba(17, 19, 28, 0.75);
+  background: rgba(5, 5, 5, 0.7);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border-radius: 22px;
@@ -2083,7 +2075,7 @@ select.sort-select {
     visibility: hidden;
     width: 280px;
     height: 100vh;
-    background: rgba(15, 23, 42, 0.98);
+    background: rgba(0, 0, 0, 0.98);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
     flex-direction: column !important;
